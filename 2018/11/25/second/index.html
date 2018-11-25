@@ -2,7 +2,7 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>JavaScriptʵ������ȥ���ظ�Ԫ�صķ��� | lyyourc</title>
+  <title>JavaScript去除数组重复项 | lyyourc</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/app.css">
@@ -30,7 +30,7 @@
   <main class="post">
   <article>
   <h1 class="article-title">
-    <a href="/2018/11/25/second/">JavaScriptʵ������ȥ���ظ�Ԫ�صķ���</a>
+    <a href="/2018/11/25/second/">JavaScript去除数组重复项</a>
   </h1>
 
   <section class="article-meta">
@@ -38,8 +38,8 @@
   </section>
 
   <section class="article-entry">
-    <p>1.��������<br>// �������ȥ�ط�<br>function unique1(array){<br> var n = []; //һ���µ���ʱ����<br> //������ǰ����<br> for(var i = 0; i &lt; array.length; i++){<br>  //�����ǰ����ĵ�i�Ѿ����������ʱ���飬��ô������<br>  //����ѵ�ǰ��push����ʱ��������<br>  if (n.indexOf(array[i]) == -1) n.push(array[i]);<br> }<br> return n;<br>}<br>// �ж�������Ƿ�֧��indexOf ��indexOf ΪecmaScript5�·��� IE8���£�����IE8�� IE8ֻ֧�ֲ���ecma5����֧��<br>if (!Array.prototype.indexOf){<br> // ����indexOf����<br> Array.prototype.indexOf = function(item){<br>  var result = -1, a_item = null;<br>  if (this.length == 0){<br>   return result;<br>  }<br>  for(var i = 0, len = this.length; i &lt; len; i++){<br>   a_item = this[i];<br>   if (a_item === item){<br>    result = i;<br>    break;<br>   }<br>  }<br>  return result;<br> }<br>}</p>
-<p>2.�����ֵ�ӷ���<br>// �ٶ���죬 ռ�ռ���ࣨ�ռ任ʱ�䣩<br>function unique2(array){<br> var n = {}, r = [], len = array.length, val, type;<br>  for (var i = 0; i &lt; array.length; i++) {<br>    val = array[i];<br>    type = typeof val;<br>    if (!n[val]) {<br>      n[val] = [type];<br>      r.push(val);<br>    } else if (n[val].indexOf(type) &lt; 0) {<br>      n[val].push(type);<br>      r.push(val);<br>    }<br>  }<br>  return r;<br>}</p>
+    <p>1.遍历数组法<br>// 最简单数组去重法<br>function unique1(array){<br> var n = []; //一个新的临时数组<br> //遍历当前数组<br> for(var i = 0; i &lt; array.length; i++){<br>  //如果当前数组的第i已经保存进了临时数组，那么跳过，<br>  //否则把当前项push到临时数组里面<br>  if (n.indexOf(array[i]) == -1) n.push(array[i]);<br> }<br> return n;<br>}<br>// 判断浏览器是否支持indexOf ，indexOf 为ecmaScript5新方法 IE8以下（包括IE8， IE8只支持部分ecma5）不支持<br>if (!Array.prototype.indexOf){<br> // 新增indexOf方法<br> Array.prototype.indexOf = function(item){<br>  var result = -1, a_item = null;<br>  if (this.length == 0){<br>   return result;<br>  }<br>  for(var i = 0, len = this.length; i &lt; len; i++){<br>   a_item = this[i];<br>   if (a_item === item){<br>    result = i;<br>    break;<br>   }<br>  }<br>  return result;<br> }<br>}</p>
+<p>2.对象键值对法<br>//  速度最快， 占空间最多（空间换时间）<br>function unique2(array){<br> var n = {}, r = [], len = array.length, val, type;<br>  for (var i = 0; i &lt; array.length; i++) {<br>    val = array[i];<br>    type = typeof val;<br>    if (!n[val]) {<br>      n[val] = [type];<br>      r.push(val);<br>    } else if (n[val].indexOf(type) &lt; 0) {<br>      n[val].push(type);<br>      r.push(val);<br>    }<br>  }<br>  return r;<br>}</p>
 
   </section>
 </article>
@@ -55,7 +55,7 @@
 
   <section class="share-btns">
     <!-- <p> share it if you like it~ </p> -->
-    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=1.��������<br>// ���">
+    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=1.遍历数组法<br>// 最简单数组去">
   Tweet
 </a>
 
