@@ -2,7 +2,7 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>hello you are so stupt | lyyourc</title>
+  <title>JavaScriptʵ������ȥ���ظ�Ԫ�صķ��� | lyyourc</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/app.css">
@@ -30,15 +30,17 @@
   <main class="post">
   <article>
   <h1 class="article-title">
-    <a href="/2018/11/10/hello-you-are-so-stupt/">hello you are so stupt</a>
+    <a href="/2018/11/25/second/">JavaScriptʵ������ȥ���ظ�Ԫ�صķ���</a>
   </h1>
 
   <section class="article-meta">
-    <p class="article-date">November 10 2018</p>
+    <p class="article-date">November 25 2018</p>
   </section>
 
   <section class="article-entry">
-    
+    <p>1.��������<br>// �������ȥ�ط�<br>function unique1(array){<br> var n = []; //һ���µ���ʱ����<br> //������ǰ����<br> for(var i = 0; i &lt; array.length; i++){<br>  //�����ǰ����ĵ�i�Ѿ����������ʱ���飬��ô������<br>  //����ѵ�ǰ��push����ʱ��������<br>  if (n.indexOf(array[i]) == -1) n.push(array[i]);<br> }<br> return n;<br>}<br>// �ж�������Ƿ�֧��indexOf ��indexOf ΪecmaScript5�·��� IE8���£�����IE8�� IE8ֻ֧�ֲ���ecma5����֧��<br>if (!Array.prototype.indexOf){<br> // ����indexOf����<br> Array.prototype.indexOf = function(item){<br>  var result = -1, a_item = null;<br>  if (this.length == 0){<br>   return result;<br>  }<br>  for(var i = 0, len = this.length; i &lt; len; i++){<br>   a_item = this[i];<br>   if (a_item === item){<br>    result = i;<br>    break;<br>   }<br>  }<br>  return result;<br> }<br>}</p>
+<p>2.�����ֵ�ӷ���<br>// �ٶ���죬 ռ�ռ���ࣨ�ռ任ʱ�䣩<br>function unique2(array){<br> var n = {}, r = [], len = array.length, val, type;<br>  for (var i = 0; i &lt; array.length; i++) {<br>    val = array[i];<br>    type = typeof val;<br>    if (!n[val]) {<br>      n[val] = [type];<br>      r.push(val);<br>    } else if (n[val].indexOf(type) &lt; 0) {<br>      n[val].push(type);<br>      r.push(val);<br>    }<br>  }<br>  return r;<br>}</p>
+
   </section>
 </article>
 
@@ -53,7 +55,7 @@
 
   <section class="share-btns">
     <!-- <p> share it if you like it~ </p> -->
-    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=">
+    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=1.��������<br>// ���">
   Tweet
 </a>
 
@@ -92,7 +94,7 @@
 <script>
   var disqus_shortname = 'drakeleung';
   
-  var disqus_url = 'http://yoursite.com/2018/11/10/hello-you-are-so-stupt/';
+  var disqus_url = 'http://yoursite.com/2018/11/25/second/';
   
   (function(){
     var dsq = document.createElement('script');
