@@ -2,7 +2,7 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>JavaScript去除数组重复项 | dangsenlin</title>
+  <title>call and apply | dangsenlin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/app.css">
@@ -30,61 +30,16 @@
   <main class="post">
   <article>
   <h1 class="article-title">
-    <a href="/2018/11/25/second/">JavaScript去除数组重复项</a>
+    <a href="/2018/12/09/call-and-apply/">call and apply</a>
   </h1>
 
   <section class="article-meta">
-    <p class="article-date">November 25 2018</p>
+    <p class="article-date">December 09 2018</p>
   </section>
 
   <section class="article-entry">
-    <p>1.遍历数组法
-// 最简单数组去重法
-function unique1(array){
-var n = []; //一个新的临时数组
-//遍历当前数组
-for(var i = 0; i &lt; array.length; i++){
-//如果当前数组的第i已经保存进了临时数组，那么跳过，
-//否则把当前项push到临时数组里面
-if (n.indexOf(array[i]) == -1) n.push(array[i]);
-}
-return n;
-}
-// 判断浏览器是否支持indexOf ，indexOf 为ecmaScript5新方法 IE8以下（包括IE8， IE8只支持部分ecma5）不支持
-if (!Array.prototype.indexOf){
-// 新增indexOf方法
-Array.prototype.indexOf = function(item){
-var result = -1, a_item = null;
-if (this.length == 0){
-return result;
-}
-for(var i = 0, len = this.length; i &lt; len; i++){
-a_item = this[i];
-if (a_item === item){
-result = i;
-break;
-}
-}
-return result;
-}
-}</p>
-<p>2.对象键值对法
-//  速度最快， 占空间最多（空间换时间）
-function unique2(array){
-var n = {}, r = [], len = array.length, val, type;
-for (var i = 0; i &lt; array.length; i++) {
-val = array[i];
-type = typeof val;
-if (!n[val]) {
-n[val] = [type];
-r.push(val);
-} else if (n[val].indexOf(type) &lt; 0) {
-n[val].push(type);
-r.push(val);
-}
-}
-return r;
-}</p>
+    <h1 id="关于call与apply方法"><a href="#关于call与apply方法" class="headerlink" title="关于call与apply方法"></a>关于call与apply方法</h1><h2 id="call"><a href="#call" class="headerlink" title="call():"></a>call():</h2><p>call:以参数的对象上下文（this/作用域）调用函数，<br>例如：A.call(b);  以b的this对象调用A函数（便于理解：短暂的给b对象加上了A属性，相当于调用b.A（）函数）<br><img src="_posts/call.png" alt="call" title="call"><br>apply方法：apply和call在作用上时相同的，apply 第一个参数也是要传入给当前对象的对象，即函数内部的this值，不同的是apple传入的是一个数组，对比如下：</p>
+<p><img src="_posts/apply.png" alt="apply" title="apply"></p>
 
   </section>
 </article>
@@ -100,9 +55,7 @@ return r;
 
   <section class="share-btns">
     <!-- <p> share it if you like it~ </p> -->
-    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=1.遍历数组法
-// 最简单数组去重法
-">
+    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text= id=" 关于call与apply方法""="">
   Tweet
 </a>
 
@@ -141,7 +94,7 @@ return r;
 <script>
   var disqus_shortname = 'drakeleung';
   
-  var disqus_url = 'http://yoursite.com/2018/11/25/second/';
+  var disqus_url = 'http://yoursite.com/2018/12/09/call-and-apply/';
   
   (function(){
     var dsq = document.createElement('script');
