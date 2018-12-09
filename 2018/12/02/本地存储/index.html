@@ -38,15 +38,50 @@
   </section>
 
   <section class="article-entry">
-    <h1>javascript本地存储的几种方案</h1>
-<h2>1.localstorage</h2>
-<p>LocalStorage就是Key-Value的简单键值对存储结构，Web Storage除了localStorage的持久性存储外，还
-有针对本次回话的sessionStorage方式，一般情况下localStorage较为常用，示例代码如下：
-Chrome中 的存储方式是以sqlite的数据库文件形式存储
-<code>function save(dataModel){&lt;/br&gt; var value = dataModel.serialize(); window.localStorage['DataModel'] = value; window.localStorage['DataCount'] = dataModel.size(); console.log(dataModel.size() + ' datas are saved'); return value; } function restore(dataModel){ var value = window.localStorage['DataModel']; if(value){ dataModel.deserialize(value); console.log(window.localStorage['DataCount'] + ' datas are restored'); return value; } return ''; } function clear(){ if(window.localStorage['DataModel']){ console.log(window.localStorage['DataCount'] + ' datas are cleared'); delete window.localStorage['DataModel']; delete window.localStorage['DataCount']; } }</code></p>
-<h2>Cookie</h2>
-<p>存储内容有限,尽量少使用
-<code>function getCookieValue(name) { if (document.cookie.length &gt; 0) { var start = document.cookie.indexOf(name + &quot;=&quot;); if (start !== -1) { start = start + name.length + 1; var end = document.cookie.indexOf(&quot;;&quot;, start); if (end === -1){ end = document.cookie.length; } return unescape(document.cookie.substring(start, end)); } } return ''; } function save(dataModel) { var value = dataModel.serialize(); document.cookie = 'DataModel=' + escape(value); document.cookie = 'DataCount=' + dataModel.size(); console.log(dataModel.size() + ' datas are saved'); return value; }</code></p>
+    <h1 id="javascript本地存储的几种方案"><a href="#javascript本地存储的几种方案" class="headerlink" title="javascript本地存储的几种方案"></a>javascript本地存储的几种方案</h1><h2 id="1-localstorage"><a href="#1-localstorage" class="headerlink" title="1.localstorage"></a>1.localstorage</h2><p>LocalStorage就是Key-Value的简单键值对存储结构，Web Storage除了localStorage的持久性存储外，还<br>有针对本次回话的sessionStorage方式，一般情况下localStorage较为常用，示例代码如下：<br>Chrome中 的存储方式是以sqlite的数据库文件形式存储<br><code>function save(dataModel){&lt;/br&gt;
+    var value = dataModel.serialize();
+    window.localStorage[&#39;DataModel&#39;] = value;
+    window.localStorage[&#39;DataCount&#39;] = dataModel.size();
+    console.log(dataModel.size() + &#39; datas are saved&#39;);
+    return value;
+  }
+  function restore(dataModel){
+    var value = window.localStorage[&#39;DataModel&#39;];
+    if(value){
+      dataModel.deserialize(value);
+      console.log(window.localStorage[&#39;DataCount&#39;] + &#39; datas are restored&#39;);
+      return value;
+    }
+    return &#39;&#39;;
+  }
+  function clear(){
+    if(window.localStorage[&#39;DataModel&#39;]){ 
+      console.log(window.localStorage[&#39;DataCount&#39;] + &#39; datas are cleared&#39;);
+    delete window.localStorage[&#39;DataModel&#39;];
+    delete window.localStorage[&#39;DataCount&#39;];
+    }
+  }</code></p>
+<h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><p>存储内容有限,尽量少使用<br><code>function getCookieValue(name) {
+if (document.cookie.length &gt; 0) {
+    var start = document.cookie.indexOf(name + &quot;=&quot;);
+    if (start !== -1) {
+        start = start + name.length + 1;
+        var end = document.cookie.indexOf(&quot;;&quot;, start);
+        if (end === -1){
+            end = document.cookie.length;
+    }
+        return unescape(document.cookie.substring(start, end));
+    }
+}
+return &#39;&#39;;
+}
+function save(dataModel) {
+    var value = dataModel.serialize();
+    document.cookie = &#39;DataModel=&#39; + escape(value);
+    document.cookie = &#39;DataCount=&#39; + dataModel.size();
+    console.log(dataModel.size() + &#39; datas are saved&#39;);
+    return value; 
+}</code></p>
 
   </section>
 </article>
@@ -62,7 +97,7 @@ Chrome中 的存储方式是以sqlite的数据库文件形式存储
 
   <section class="share-btns">
     <!-- <p> share it if you like it~ </p> -->
-    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text=>javascript本地存储的几种方案">
+    <a class="twitter-share-button" data-size="large" data-via="DrakeLeung" href="https://twitter.com/intent/tweet?text= id=" javascript本地存储的"="">
   Tweet
 </a>
 
