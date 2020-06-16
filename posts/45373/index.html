@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="never giveup stronger survival">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dang&#39;s technology blog">
-<meta property="og:url" content="http://yoursite.com/source/categories/HMR/index.html">
+  <meta name="description" content="现对各排序算法通过Javascript进行总结">
+<meta name="keywords" content="排序,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的排序算法总结">
+<meta property="og:url" content="http://yoursite.com/posts/45373/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="never giveup stronger survival">
+<meta property="og:description" content="现对各排序算法通过Javascript进行总结">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-16T13:25:52.446Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dang&#39;s technology blog">
-<meta name="twitter:description" content="never giveup stronger survival">
+<meta name="twitter:title" content="我的排序算法总结">
+<meta name="twitter:description" content="现对各排序算法通过Javascript进行总结">
 
-<link rel="canonical" href="http://yoursite.com/source/categories/HMR/">
+<link rel="canonical" href="http://yoursite.com/posts/45373/">
 
 
 <script id="page-configurations">
@@ -39,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: HMR | dang's technology blog</title>
+  <title>我的排序算法总结 | dang's technology blog</title>
   
 
 
@@ -153,53 +155,115 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">HMR
-          <small>分类</small>
-        </h2>
-      </div>
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/45373/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我的排序算法总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-16 21:05:18 / 修改时间：21:25:52" itemprop="dateCreated datePublished" datetime="2020-06-16T21:05:18+08:00">2020-06-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/排序/" itemprop="url" rel="index"><span itemprop="name">排序</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/排序/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+        <p>现对各排序算法通过Javascript进行总结</p>
+<a id="more"></a>
+<p><em>extra</em></p>
+<h1 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h1><p>二分查找的条件为有序，数组。基本思想为先与数组中间元素比较，通过结果选择左半边或右半边进行递归。终止条件就是数组长度只有一项时，查找到或者没找到。<br>代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">function binarySearch(arr, start ,end, target)&#123;</span><br><span class="line">    if(end - start &lt;= 0)&#123;</span><br><span class="line">        if(target === arr[start])&#123;</span><br><span class="line">            return start</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">             return &quot;not find&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    let mid = (start + end) &gt;&gt; 1</span><br><span class="line">    if(arr[mid] &gt; target)&#123;</span><br><span class="line">        return binarySearch(arr, 0, mid - 1, target)</span><br><span class="line">    &#125;else if(arr[mid] &lt; target)&#123;</span><br><span class="line">        return binarySearch(arr,mid + 1 , end, target)</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        return mid</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O(log2N)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-15T20:40:30+08:00"
-              content="2020-06-15">
-          06-15
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/排序/" rel="tag"># 排序</a>
+              <a href="/source/tags/算法/" rel="tag"># 算法</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/4442/" itemprop="url">
-            <span itemprop="name">webpack热更新原理</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/4442/" rel="prev" title="webpack热更新原理">
+      <i class="fa fa-chevron-left"></i> webpack热更新原理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -250,6 +314,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#二分查找"><span class="nav-number">1.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快速排序"><span class="nav-number">2.</span> <span class="nav-text">快速排序</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
