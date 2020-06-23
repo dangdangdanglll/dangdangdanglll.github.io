@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/site.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/site.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+<meta name="keywords" content="http,网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于http,https与版本">
+<meta property="og:url" content="http://yoursite.com/posts/45346/index.html">
+<meta property="og:site_name" content="dang&#39;s technology blog">
+<meta property="og:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-23T13:50:25.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于http,https与版本">
+<meta name="twitter:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+
+<link rel="canonical" href="http://yoursite.com/posts/45346/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>关于http,https与版本 | dang's technology blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dang's technology blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Coding Fighting</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/45346/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于http,https与版本
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-22 23:13:27" itemprop="dateCreated datePublished" datetime="2020-06-22T23:13:27+08:00">2020-06-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-23 21:50:25" itemprop="dateModified" datetime="2020-06-23T21:50:25+08:00">2020-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/http/网络/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：</p>
+<a id="more"></a>
+<h1 id="一个故事"><a href="#一个故事" class="headerlink" title="一个故事"></a>一个故事</h1><h2 id="http"><a href="#http" class="headerlink" title="http"></a>http</h2><p>假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？</p>
+<h2 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h2><p>他们商量了一下使用加密的方式,也就是他们都有一个<strong>共同</strong>的密钥，在A发送信息之前先将信息通过密钥加密，B收到信息之后用密钥解密就能得到信息了。由于别人没有密钥，只能得到加密过的信息，没有用。但是存在一个问题：如果发送密钥的过程被监听怎么办？</p>
+<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>A和B又使用了一种新的加密方式：加密和解密的密钥是不同的，加密的密钥称之为公钥，解密的密钥称之为私钥，公钥所有人都知道，私钥只有自己知道。当A想要给B发送信息时，先通过B的公钥加密，B得到后再用私密解密。别人只能拿到B的公钥和公钥加密过的信息，没有私密所以无法解密。<br>但是由于非对称加密的速度比对称加密慢几十上百倍，所以一般采用两者结合的方式：先使用非对称加密传输一个对称加密的密钥，之后再通过密钥进行对称加密传输。<br>看似问题解决了，但依然存在一种问题：<em>中间人攻击</em></p>
+<h2 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h2><p>在非对称加密的过程中，在A得知B的公钥过程中，并不能确定这个公钥真的是B的，比如中间人C把自己的公钥发给A，让A以为这个公钥是B的，A发送的信息实际上是通过C的公钥加密过的，C肯定有自己的私钥，不但能指导A发送到信息，还能用B的公钥发送一些假信息，这样A和B都不知道信息已经被篡改了。</p>
+<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>将公钥和个人信息发在一起，称之为证书。A得到B的公钥时查看个人信息，似乎就能防止中间人攻击了。但是证书被篡改怎么办？比如C拿到B的证书之后，修改证书中B的公钥替换成C的，个人信息不变，再发送给A，似乎又有问题了。</p>
+<h2 id="消息摘要"><a href="#消息摘要" class="headerlink" title="消息摘要"></a>消息摘要</h2><p>使用一种新算法Hash加密证书，这种算法的特点是加密过的信息只要修改过一点点就截然不同很容易察觉。所以 <code>证书 + 算法 = 消息摘要</code>以后就发送消息摘要。但是问题又来了：如果C将A的消息摘要整个替换怎么办？</p>
+<h2 id="签名-证书"><a href="#签名-证书" class="headerlink" title="签名 + 证书"></a>签名 + 证书</h2><p>类似于现实世界中的公证处，网络世界也有公证处：CA机构，CA的私钥和公钥大家都认可，公钥很难被替换。<br>终极大招：B将B的消息摘要通过CA私钥加密后得到数字签名，数字签名和消息摘要（证书 + Hash算法）称为数字证书，将数字证书发送给A,A拿到数字证书后先用CA公钥解密得到消息摘要XX,再用相同的Hash算法解密得到消息摘要YY,对比XX和YY似乎就解决了问题。</p>
+<p>总结：<br>防止公钥与人不对应：个人信息 + 公钥 = 证书 —-&gt; 证书被修改<br>防止证书被篡改：证书 + Hash算法 = 消息摘要（只要被修改就能查觉） —–&gt;  替换整个消息摘要<br>防止替换消息摘要：消息摘要 + CA私密加密 = 数字签名， 数字签名 + 消息摘要 = 数字证书<br>  得到数字证书： 用同样的Hash 算法， 再次生成消息摘要，CA的公钥对数字签名解密， 得到CA创建的消息摘要，两者一比。</p>
+<h1 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h1><h2 id="又一个小故事"><a href="#又一个小故事" class="headerlink" title="又一个小故事"></a>又一个小故事</h2><h2 id="RSA加密过程："><a href="#RSA加密过程：" class="headerlink" title="RSA加密过程："></a>RSA加密过程：</h2><ol>
+<li>选两个大质数p和q ,N = pq</li>
+<li>r = (p-1)(q-1)</li>
+<li>小于r的数e,求e关于模r的模反元素d</li>
+<li>销毁p,q<br>(N,e)是公钥，(N,d)是私钥</li>
+</ol>
+<p>欧拉函数：fn(n) = 小于n的所有n的互质数数目，如fn(8)=4（1,3,5,7）<br>模反元素：如果两个正整数a和n互质，那么一定可以找到整数b，使得 ab-1 被n整除，或者说ab被n除的余数是1。这时，b就叫做a的“模反元素”。</p>
+<h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>原文n:通过<br><code>n^e = c(mod N)</code><br>得到c,发送c</p>
+<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>将c，通过<br><code>c^d = n(mod N)</code><br>得到原文n</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><code>c^d ≡ n^(e·d)(mod N)</code><br>以及ed ≡ 1 (mod p-1)和ed ≡ 1 (mod q-1)。由费马小定理可证明（因为p和q是质数）<br>n^(e·d)≡ n(mod p) 和 n^(e·d) ≡ n (mod q)<br>故：<br><code>n(^e·d) ≡ n (mod pq)</code></p>
+<h1 id="HTTP各版本异同"><a href="#HTTP各版本异同" class="headerlink" title="HTTP各版本异同"></a>HTTP各版本异同</h1><h2 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h2><p>1.0版本的工作方式是每次TCP连接只能发送一个请求，当服务器响应后就会关闭这次连接，下一个请求需要再次建立TCP连接，就是不支持keepalive.<br>为了解决这个问题，有些浏览器在请求时，用了一个非标准的<code>Connection</code>字段。<br><code>Connection: keep-alive</code></p>
+<h2 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h2><h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>1.1 版的最大变化，就是引入了<strong>持久连接</strong>,<em>即TCP连接默认不关闭，可以被多个请求复用，不用声明Connection: keep-alive.一个TCP连接可以允许多个HTTP请求</em></p>
+<h3 id="管道机制"><a href="#管道机制" class="headerlink" title="管道机制"></a>管道机制</h3><p>一个TCP连接里，<strong>允许多个请求同时发送</strong>，增加了并发性，进一步改善了HTTP协议的效率。以前是客户端想要请求资源A和B,先发请求A，得到响应再发请求B.现在是同时发送请求A和B.</p>
+<h2 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP/2.0"></a>HTTP/2.0</h2><h3 id="多工"><a href="#多工" class="headerlink" title="多工"></a>多工</h3><p>在一个连接里，客户端和浏览器都可以同时发送多个请求或回应，而且不用按照顺序一一对应，这样就避免了”队头堵塞”。</p>
+<h3 id="二进制协议"><a href="#二进制协议" class="headerlink" title="二进制协议"></a>二进制协议</h3><p>1.1中头信息是文本，数据体可以说文本和二进制。2.0中头信息和数据体都是二进制，通常为“帧”</p>
+<p><a href="https://www.zhihu.com/search?type=content&amp;q=RSA" target="_blank" rel="noopener">RSA知乎</a><br><a href="https://blog.csdn.net/sunmenggmail/article/details/11994013" target="_blank" rel="noopener">RSA</a><br><a href="https://blog.csdn.net/qq_22238021/article/details/81197157" target="_blank" rel="noopener">HTTP</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/http/" rel="tag"># http</a>
+              <a href="/source/tags/网络/" rel="tag"># 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/30663/" rel="prev" title="分清cookie, session与token">
+      <i class="fa fa-chevron-left"></i> 分清cookie, session与token
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一个故事"><span class="nav-number">1.</span> <span class="nav-text">一个故事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#http"><span class="nav-number">1.1.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">1.2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">1.3.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中间人攻击"><span class="nav-number">1.4.</span> <span class="nav-text">中间人攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#证书"><span class="nav-number">1.5.</span> <span class="nav-text">证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息摘要"><span class="nav-number">1.6.</span> <span class="nav-text">消息摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#签名-证书"><span class="nav-number">1.7.</span> <span class="nav-text">签名 + 证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA加密算法"><span class="nav-number">2.</span> <span class="nav-text">RSA加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#又一个小故事"><span class="nav-number">2.1.</span> <span class="nav-text">又一个小故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RSA加密过程："><span class="nav-number">2.2.</span> <span class="nav-text">RSA加密过程：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加密过程"><span class="nav-number">2.2.1.</span> <span class="nav-text">加密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解密过程"><span class="nav-number">2.2.2.</span> <span class="nav-text">解密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">2.2.3.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP各版本异同"><span class="nav-number">3.</span> <span class="nav-text">HTTP各版本异同</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-1-0"><span class="nav-number">3.1.</span> <span class="nav-text">HTTP/1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-1-1"><span class="nav-number">3.2.</span> <span class="nav-text">HTTP/1.1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#持久连接"><span class="nav-number">3.2.1.</span> <span class="nav-text">持久连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道机制"><span class="nav-number">3.2.2.</span> <span class="nav-text">管道机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-2-0"><span class="nav-number">3.3.</span> <span class="nav-text">HTTP/2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多工"><span class="nav-number">3.3.1.</span> <span class="nav-text">多工</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制协议"><span class="nav-number">3.3.2.</span> <span class="nav-text">二进制协议</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dangsenlin" src="/images/ava.png">
+  <p class="site-author-name" itemprop="name">dangsenlin</p>
+  <div class="site-description" itemprop="description">never giveup stronger survival</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dangsenlin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
