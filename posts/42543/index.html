@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/site.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/site.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="JS关于异步编程的解决方案:">
+<meta name="keywords" content="ES6,async,await,promise">
+<meta property="og:type" content="article">
+<meta property="og:title" content="async&#x2F;await及相关思考">
+<meta property="og:url" content="http://yoursite.com/posts/42543/index.html">
+<meta property="og:site_name" content="dang&#39;s technology blog">
+<meta property="og:description" content="JS关于异步编程的解决方案:">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-26T17:48:27.955Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="async&#x2F;await及相关思考">
+<meta name="twitter:description" content="JS关于异步编程的解决方案:">
+
+<link rel="canonical" href="http://yoursite.com/posts/42543/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>async/await及相关思考 | dang's technology blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dang's technology blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Coding Fighting</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/42543/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          async/await及相关思考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-26 16:55:29" itemprop="dateCreated datePublished" datetime="2020-06-26T16:55:29+08:00">2020-06-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-27 01:48:27" itemprop="dateModified" datetime="2020-06-27T01:48:27+08:00">2020-06-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>JS关于异步编程的解决方案:<br><a id="more"></a></p>
+<ol>
+<li>回调函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ajax(url, () =&gt; &#123;</span><br><span class="line">    // 处理逻辑</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>缺点：容易写出<strong>回调地狱</strong></p>
+<ol start="2">
+<li>事件监听<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f1.on(&apos;done&apos;, f2);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>缺点：整个程序都要变成事件驱动型，运行流程会变得很不清晰。阅读代码的时候，很难看出主流程。</p>
+<ol start="3">
+<li>发布订阅/观察者模式</li>
+<li>promise， generator 与 async/await</li>
+</ol>
+<h1 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h1><p>如上所述，回调函数的缺点是容易写出回调地狱，导致代码难以阅读和维护，以及混乱的错误处理（可能每一次回调都需专门的错误处理，而promise只需要在最后catch就行）。</p>
+<h2 id="构造函数promise"><a href="#构造函数promise" class="headerlink" title="构造函数promise"></a>构造函数promise</h2><p>参数是一个函数，函数的两个参数分别是resolve和reject</p>
+<h2 id="then"><a href="#then" class="headerlink" title="then"></a>then</h2><p>在实例之后.then,参数是两个函数，第一个函数是resolve时执行，第二个函数时reject时执行。*每个函数的参数是之前resolve或reject传过来的。</p>
+<h2 id="catch"><a href="#catch" class="headerlink" title="catch"></a>catch</h2><p>一般在then之后catch。相当于then的第二个参数。这样做的好处是<strong>既可以捕获实例的错误，也可以捕获then的错误</strong></p>
+<h2 id="all"><a href="#all" class="headerlink" title="all"></a>all</h2><p>参数是一个数组，数组的每一项都是promise，如果每一项都resolve，将各项的返回值组成一个数组返回给回调函数，如果有一个reject，将这个reject项的结果返回给回调函数。<br><strong>all各项的执行是并发的，可以节约时间</strong></p>
+<h2 id="race"><a href="#race" class="headerlink" title="race"></a>race</h2><p>数组中有一个resolve，将那个项的结果返回给回调函数。<strong>典型应用：规定时间内请求一个接口，超时则返回</strong></p>
+<h1 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h1><p><strong>async函数中遇到await的地方（是promise）会等待其resolve再执行下面的代码（回调函数）</strong><br>但问题在于promise中一大堆then似乎并不优雅，并且有时候不得不在then还得执行then，错误捕获也不完美（匿名函数）,所以async/await出现了。他将异步代码以同步的形式表现出来。</p>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。我们仍然用 setTimeout 来模拟异步操作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 传入参数 n，表示这个函数执行的时间（毫秒）</span><br><span class="line"> * 执行的结果是 n + 200，这个值将用于下一步骤</span><br><span class="line"> */</span><br><span class="line">function takeLongTime(n) &#123;</span><br><span class="line">    return new Promise(resolve =&gt; &#123;</span><br><span class="line">        setTimeout(() =&gt; resolve(n + 200), n);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function step1(n) &#123;</span><br><span class="line">    console.log(`step1 with $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function step2(n) &#123;</span><br><span class="line">    console.log(`step2 with $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function step3(n) &#123;</span><br><span class="line">    console.log(`step3 with $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>promise<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function doIt() &#123;</span><br><span class="line">    console.time(&quot;doIt&quot;);</span><br><span class="line">    const time1 = 300;</span><br><span class="line">    step1(time1)</span><br><span class="line">        .then(time2 =&gt; step2(time2))</span><br><span class="line">        .then(time3 =&gt; step3(time3))</span><br><span class="line">        .then(result =&gt; &#123;</span><br><span class="line">            console.log(`result is $&#123;result&#125;`);</span><br><span class="line">            console.timeEnd(&quot;doIt&quot;);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doIt();</span><br><span class="line">// c:\var\test&gt;node --harmony_async_await .</span><br><span class="line">// step1 with 300</span><br><span class="line">// step2 with 500</span><br><span class="line">// step3 with 700</span><br><span class="line">// result is 900</span><br><span class="line">// doIt: 1507.251ms</span><br></pre></td></tr></table></figure></p>
+<p>async:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">async function doIt() &#123;</span><br><span class="line">    console.time(&quot;doIt&quot;);</span><br><span class="line">    const time1 = 300;</span><br><span class="line">    const time2 = await step1(time1);</span><br><span class="line">    const time3 = await step2(time2);</span><br><span class="line">    const result = await step3(time3);</span><br><span class="line">    console.log(`result is $&#123;result&#125;`);</span><br><span class="line">    console.timeEnd(&quot;doIt&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doIt();</span><br></pre></td></tr></table></figure></p>
+<p>现在把业务要求改一下，仍然是三个步骤，但每一个步骤都需要之前每个步骤的结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function step1(n) &#123;</span><br><span class="line">    console.log(`step1 with $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function step2(m, n) &#123;</span><br><span class="line">    console.log(`step2 with $&#123;m&#125; and $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(m + n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function step3(k, m, n) &#123;</span><br><span class="line">    console.log(`step3 with $&#123;k&#125;, $&#123;m&#125; and $&#123;n&#125;`);</span><br><span class="line">    return takeLongTime(k + m + n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>promise:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">function doIt() &#123;</span><br><span class="line">    console.time(&quot;doIt&quot;);</span><br><span class="line">    const time1 = 300;</span><br><span class="line">    step1(time1)</span><br><span class="line">        .then(time2 =&gt; &#123;</span><br><span class="line">            return step2(time1, time2)</span><br><span class="line">                .then(time3 =&gt; [time1, time2, time3]);</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(times =&gt; &#123;</span><br><span class="line">            const [time1, time2, time3] = times;</span><br><span class="line">            return step3(time1, time2, time3);</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(result =&gt; &#123;</span><br><span class="line">            console.log(`result is $&#123;result&#125;`);</span><br><span class="line">            console.timeEnd(&quot;doIt&quot;);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line">doIt();</span><br></pre></td></tr></table></figure></p>
+<p>async:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">async function doIt() &#123;</span><br><span class="line">    console.time(&quot;doIt&quot;);</span><br><span class="line">    const time1 = 300;</span><br><span class="line">    const time2 = await step1(time1);</span><br><span class="line">    const time3 = await step2(time1, time2);</span><br><span class="line">    const result = await step3(time1, time2, time3);</span><br><span class="line">    console.log(`result is $&#123;result&#125;`);</span><br><span class="line">    console.timeEnd(&quot;doIt&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doIt();</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://segmentfault.com/a/1190000007535316" target="_blank" rel="noopener">参考</a></p>
+<h2 id="原理（自动执行机）"><a href="#原理（自动执行机）" class="headerlink" title="原理（自动执行机）"></a>原理（自动执行机）</h2><p>async实际就是generator函数的语法糖（generator + 自动执行机）<br>最简单的自动执行机：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">function spawn(genF) &#123;</span><br><span class="line">  return new Promise(function(resolve, reject) &#123;</span><br><span class="line">    const gen = genF();</span><br><span class="line">    function step(nextF) &#123;</span><br><span class="line">      let next;</span><br><span class="line">      next = nextF();</span><br><span class="line">      if(next.done) &#123;</span><br><span class="line">        return resolve(next.value);</span><br><span class="line">      &#125;</span><br><span class="line">      Promise.resolve(next.value).then(function(v) &#123;</span><br><span class="line">        step(function() &#123; return gen.next(v); &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    step(function() &#123; return gen.next(undefined); &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>当async函数中多个异步操作没有依赖关系时，不适合写成多个await（因为await同步执行，会阻塞）,此时应考虑promise.all()</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/ES6/" rel="tag"># ES6</a>
+              <a href="/source/tags/async/" rel="tag"># async</a>
+              <a href="/source/tags/await/" rel="tag"># await</a>
+              <a href="/source/tags/promise/" rel="tag"># promise</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/45346/" rel="prev" title="关于http,https与版本">
+      <i class="fa fa-chevron-left"></i> 关于http,https与版本
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造函数promise"><span class="nav-number">1.1.</span> <span class="nav-text">构造函数promise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#then"><span class="nav-number">1.2.</span> <span class="nav-text">then</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#catch"><span class="nav-number">1.3.</span> <span class="nav-text">catch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#all"><span class="nav-number">1.4.</span> <span class="nav-text">all</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#race"><span class="nav-number">1.5.</span> <span class="nav-text">race</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#async-await"><span class="nav-number">2.</span> <span class="nav-text">async/await</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个例子"><span class="nav-number">2.1.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理（自动执行机）"><span class="nav-number">2.2.</span> <span class="nav-text">原理（自动执行机）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">2.3.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dangsenlin" src="/images/ava.png">
+  <p class="site-author-name" itemprop="name">dangsenlin</p>
+  <div class="site-description" itemprop="description">never giveup stronger survival</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dangsenlin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
