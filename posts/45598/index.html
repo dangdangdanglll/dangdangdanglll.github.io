@@ -20,18 +20,24 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="never giveup stronger survival">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dang&#39;s technology blog">
-<meta property="og:url" content="http://yoursite.com/source/tags/闭包/index.html">
+  <meta name="description" content="浏览器缓存包括：HTTP缓存，indexDB，cookie，localstorage.现对HTTP缓存稍做分析">
+<meta name="keywords" content="HTTP,缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP缓存">
+<meta property="og:url" content="http://yoursite.com/posts/45598/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="never giveup stronger survival">
+<meta property="og:description" content="浏览器缓存包括：HTTP缓存，indexDB，cookie，localstorage.现对HTTP缓存稍做分析">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://static01.imgkr.com/temp/b95afd6664b84760b061f3ed9b558ece.jpg">
+<meta property="og:image" content="https://static01.imgkr.com/temp/b1ace672e50b40d298aa6d42404f66ca.jpg">
+<meta property="og:image" content="https://static01.imgkr.com/temp/091f47e8da8e4945b4b9e2d30cc821ef.jpg">
+<meta property="og:updated_time" content="2020-06-28T05:33:13.600Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dang&#39;s technology blog">
-<meta name="twitter:description" content="never giveup stronger survival">
+<meta name="twitter:title" content="HTTP缓存">
+<meta name="twitter:description" content="浏览器缓存包括：HTTP缓存，indexDB，cookie，localstorage.现对HTTP缓存稍做分析">
+<meta name="twitter:image" content="https://static01.imgkr.com/temp/b95afd6664b84760b061f3ed9b558ece.jpg">
 
-<link rel="canonical" href="http://yoursite.com/source/tags/闭包/">
+<link rel="canonical" href="http://yoursite.com/posts/45598/">
 
 
 <script id="page-configurations">
@@ -39,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 闭包 | dang's technology blog</title>
+  <title>HTTP缓存 | dang's technology blog</title>
   
 
 
@@ -153,53 +159,113 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">闭包
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/45598/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HTTP缓存
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-28 01:35:12 / 修改时间：13:33:13" itemprop="dateCreated datePublished" datetime="2020-06-28T01:35:12+08:00">2020-06-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+        <p>浏览器缓存包括：HTTP缓存，indexDB，cookie，localstorage.现对HTTP缓存稍做分析<br><a id="more"></a></p>
+<p>HTTP缓存分为<strong>强缓存</strong>和<strong>协商缓存</strong>，大致流程是先检查强缓存，可以使用则直接使用缓存，否则发请求检测协商缓存，可以使用则使用缓存，否则从服务器获取资源。<br><img src="https://static01.imgkr.com/temp/b95afd6664b84760b061f3ed9b558ece.jpg" alt="pic"></p>
+<h1 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h1><h2 id="Expires"><a href="#Expires" class="headerlink" title="Expires"></a>Expires</h2><p>Expires具体指资源的到期时间，超过这个时间表过期资源。<br>HTTP1.0标准<br>缺点是由于使用了具体的日期（年月日时分秒），可能由于时区，当前时间获取错误等原因容易导致错误。</p>
+<h2 id="Cache-Control"><a href="#Cache-Control" class="headerlink" title="Cache-Control"></a>Cache-Control</h2><p>HTTP1.1标准<br>有以下字段组成：</p>
+<ol>
+<li><strong>max-age</strong>：指一个时间长度，多长时间之后过期</li>
+<li><strong>no-cache</strong>: 强制所有缓存了该响应的用户，在使用已缓存的数据前，发送带验证器的请求到服务器。不是字面意思上的不缓存。</li>
+<li><strong>no-store</strong>: 禁止缓存。</li>
+</ol>
+<font color="red">Cache-Control优先级高于Expires(使用了时间长度而非具体时间更合理)</font>
+
+<h1 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h1><p>强缓存没有命中说明过期了，但是过期不一定就是资源修改不能使用缓存了，这时判断协商缓存</p>
+<h2 id="Last-Motified-If-Modified-Since"><a href="#Last-Motified-If-Modified-Since" class="headerlink" title="Last-Motified/If-Modified-Since"></a>Last-Motified/If-Modified-Since</h2><p>Last-Motified是指服务端最后一次修改资源的时间，响应头部会带上这个标识。浏览器第一次请求之后，会记录这个时间，下次请求时，请求头部的If-Motified-Since即为之前记录的时间。服务端收到If-Motified-Since后会对比，如果修改过就返回最新资源，状态码200，如果没有修改过，返回304.<br><img src="https://static01.imgkr.com/temp/b1ace672e50b40d298aa6d42404f66ca.jpg" alt="pic"></p>
+<h2 id="Etag-If-None-Match"><a href="#Etag-If-None-Match" class="headerlink" title="Etag/If-None-Match"></a>Etag/If-None-Match</h2><p>由服务器端上生成的一段 hash 字符串，第一次请求时响应头带上 ETag，之后的浏览器请求会携带上If-None-Match，服务端检查Etag，返回200或304<br><img src="https://static01.imgkr.com/temp/091f47e8da8e4945b4b9e2d30cc821ef.jpg" alt="pic"></p>
+<font color="red">Etag的优先级高于Last-Motified(还是时间的问题，hash值的话不存在这个问题)</font>
+
+<p><a href="https://zhuanlan.zhihu.com/p/29750583" target="_blank" rel="noopener">参考</a></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-24T21:20:50+08:00"
-              content="2020-03-24">
-          03-24
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/HTTP/" rel="tag"># HTTP</a>
+              <a href="/source/tags/缓存/" rel="tag"># 缓存</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/39246/" itemprop="url">
-            <span itemprop="name">JavaScript中的闭包</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/56868/" rel="prev" title="关于跨域">
+      <i class="fa fa-chevron-left"></i> 关于跨域
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/undefined/" rel="next" title="世界上最复杂的问题">
+      世界上最复杂的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -250,6 +316,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#强缓存"><span class="nav-number">1.</span> <span class="nav-text">强缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Expires"><span class="nav-number">1.1.</span> <span class="nav-text">Expires</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache-Control"><span class="nav-number">1.2.</span> <span class="nav-text">Cache-Control</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#协商缓存"><span class="nav-number">2.</span> <span class="nav-text">协商缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Last-Motified-If-Modified-Since"><span class="nav-number">2.1.</span> <span class="nav-text">Last-Motified/If-Modified-Since</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Etag-If-None-Match"><span class="nav-number">2.2.</span> <span class="nav-text">Etag/If-None-Match</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
