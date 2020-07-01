@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/site.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/site.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤？这个问题我愿称之为世界上最复杂的问题，甚至可以从回车键的电流回路闭合或者触摸屏电容变化讲起，，，知乎百度大佬">
+<meta name="keywords" content="HTTP,TCP&#x2F;IP,DNS,三次握手四次挥手">
+<meta property="og:type" content="article">
+<meta property="og:title" content="世界上最复杂的问题">
+<meta property="og:url" content="http://yoursite.com/posts/34038/index.html">
+<meta property="og:site_name" content="dang&#39;s technology blog">
+<meta property="og:description" content="从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤？这个问题我愿称之为世界上最复杂的问题，甚至可以从回车键的电流回路闭合或者触摸屏电容变化讲起，，，知乎百度大佬">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/f259bd90-7f92-47b3-834f-6bb1980e311b.jpg">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/f4279a87-eae4-43ec-83af-c5a78aaebb0a.jpg">
+<meta property="og:updated_time" content="2020-07-01T14:26:58.820Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="世界上最复杂的问题">
+<meta name="twitter:description" content="从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤？这个问题我愿称之为世界上最复杂的问题，甚至可以从回车键的电流回路闭合或者触摸屏电容变化讲起，，，知乎百度大佬">
+<meta name="twitter:image" content="https://imgkr.cn-bj.ufileos.com/f259bd90-7f92-47b3-834f-6bb1980e311b.jpg">
+
+<link rel="canonical" href="http://yoursite.com/posts/34038/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>世界上最复杂的问题 | dang's technology blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dang's technology blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Coding Fighting</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/34038/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          世界上最复杂的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-28 01:35:37" itemprop="dateCreated datePublished" datetime="2020-06-28T01:35:37+08:00">2020-06-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-01 22:26:58" itemprop="dateModified" datetime="2020-07-01T22:26:58+08:00">2020-07-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/网络/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤？<br>这个问题我愿称之为世界上最复杂的问题，甚至可以从回车键的电流回路闭合或者触摸屏电容变化讲起，，，<a href="https://www.zhihu.com/question/34873227" target="_blank" rel="noopener">知乎</a><br><a href="https://www.zhihu.com/question/34873227" target="_blank" rel="noopener">百度大佬</a></p>
+<a id="more"></a>
+<h1 id="从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤"><a href="#从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤" class="headerlink" title="从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤"></a>从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤</h1><h2 id="简单流程"><a href="#简单流程" class="headerlink" title="简单流程"></a>简单流程</h2><ol>
+<li>浏览器分析URL</li>
+<li>浏览器向DNS请求解析域名的IP</li>
+<li>浏览器与服务器建立TCP链接(三次握手)</li>
+<li>浏览器发出GET请求</li>
+<li>服务器响应index.html页面</li>
+<li>TCP链接释放</li>
+<li>浏览器解析页面</li>
+</ol>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ol>
+<li>地址栏会先分析字符串是否符合URL的规则，符合则进行下一步</li>
+<li>从域名到IP：</li>
+</ol>
+<ul>
+<li>查缓存：浏览器缓存 -&gt; 系统缓存 -&gt; 路由缓存 -&gt; 系统hosts文件 ， 上述都没有则查询DNS服务器</li>
+<li>查询DNS服务器：通过TCP/IP(中的UDP)联系<strong>本地</strong>DNS服务器8.8.8.8(自己的是1.1.1.1),一般由网络接入服务商提供(如中国移动)，DNS服务器也会查询自己的缓存 -&gt; 联系根域名服务器 -&gt;  根域名服务器给出一个域服务器地址让本地服务器去查 -&gt; 域服务器告诉本地服务器解析服务器地址继续让本地服务器去查 -&gt; 本地服务器缓存<br><em>一个参数TTL(time to live)是本地DNS服务器缓存的时间，最长24h</em></li>
+</ul>
+<h2 id="TLS-SSL过程"><a href="#TLS-SSL过程" class="headerlink" title="TLS/SSL过程"></a>TLS/SSL过程</h2><ol>
+<li>client Hello: 客户端向服务端发送随机数Random1, SSL Version, 加密套件</li>
+<li>server Hello: 服务端向客户端发送随机数Random2, 加密套件(从上一个加密套件得到的算法等)</li>
+<li>certificate: 服务端将自己的证书下发给客户端</li>
+<li>certificate verify:  客户端先从CA验证证书的合法性，再取出公钥，利用公钥加密Random3，生成premaster key</li>
+<li>client key exchange： 服务端拿到premaster key后用私钥解密出Random3</li>
+<li>client 和 client 使用 Random1 + Random2 + Random3 作为密钥进行加密通话</li>
+</ol>
+<h2 id="三次握手-四次挥手"><a href="#三次握手-四次挥手" class="headerlink" title="三次握手/四次挥手"></a>三次握手/四次挥手</h2><p>各字段意义：<br>SYN: 建立连接标志位<br>ACK: ack是否有效标志位<br>ack: 之前的信息成功接受<br>seq: 序号(分片后合并的依据)<br>FIN: 断开连接标志位</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>C-&gt;S ：SYN=1,seq=x<br>C<-s :="" syn="1,seq=y,ACK=1,ack=x+1" c-="">S : seq=x+1,ACK=1,ack=y+1</-s></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>C-&gt;S : FIN=1,seq=x<br>C&lt;-S : ACK=1,ack=x+1<br>C<-s :="" fin="1,seq=y" c-="">S : seq=x+1,ACK=1,ack=w+1</-s></p>
+<ul>
+<li><p>为什么握手是三次，两次行吗？<br>首先明白三次握手的目的：第一次服务端知道了客户端有发送的能力，服务端有接受的能力；第二次客户端知道了服务端有接受和发送的能力，自己也有接受和发送到能力，但此时服务端还不知道客户端有没有接受的能力和服务端有没有发送的能力。<em>比如客户端握手一次没有响应再握手一次得到响应此时建立连接，传输数据断开连接完事第一次握手到达了服务端，此时服务端响应并一种等待数据造成了浪费</em></p>
+</li>
+<li><p>为什么握手是三次而挥手是四次？<br>四次挥手也可以理解成三次，将二三次合并就和三次握手一样了，之所以不能合并是因为第三次发送FIN是依据上一层(应用层)指令(有响应还没发完)，不能一起发送回复信息和FIN,所以一定有间隔。</p>
+</li>
+<li><p>三次握手可以携带数据吗？<br><strong>第一次，第二次不可以</strong>,第三次可以：为了防止攻击服务器(第一次时携带大量数据让服务器解析)</p>
+</li>
+</ul>
+<h2 id="TCP-UDP异同"><a href="#TCP-UDP异同" class="headerlink" title="TCP/UDP异同"></a>TCP/UDP异同</h2><ol>
+<li>UDP尽最大努力交付，不保证可靠， TCP可靠</li>
+<li>TCP可靠，</li>
+<li>TCP面向字节流，UDP面向报文</li>
+</ol>
+<p><a href="https://blog.csdn.net/ce123_zhouwei/article/details/8976006" target="_blank" rel="noopener">参考</a><br><a href="https://zhuanlan.zhihu.com/p/53374516" target="_blank" rel="noopener">参考</a><br><a href="https://segmentfault.com/a/1190000020610336" target="_blank" rel="noopener">参考</a></p>
+<h2 id="浏览器对响应的解析"><a href="#浏览器对响应的解析" class="headerlink" title="浏览器对响应的解析"></a>浏览器对响应的解析</h2><p><em>extra:</em><br>不同于ISO的七层模型，TCP/IP是四层模型，如图：<br><img src="https://imgkr.cn-bj.ufileos.com/f259bd90-7f92-47b3-834f-6bb1980e311b.jpg" alt="pic"></p>
+<ul>
+<li>应用层：HTTP, SNMP, FTP, TFTP, DNS, </li>
+<li>传输层：TCP, UDP</li>
+<li>网络层：IP, ICMP, OSPF, IGMP</li>
+<li>网络接口层：SLIP, CSLIP, MTU</li>
+</ul>
+<p>套接字(Socket)<br><em>网络层提供的是主机到主机之间的通信</em><br><em>传输层提供的是进程到进程之间的通信</em><br>Socket是应用层和传输层之间的一层抽象。如图：<br><img src="https://imgkr.cn-bj.ufileos.com/f4279a87-eae4-43ec-83af-c5a78aaebb0a.jpg" alt="pic"><br>把主机比作一个房子，进程比作方子中的一个个房间，Socket就相当于房间上的门，从房子到房间进出须经过这一道门。<br>Socket的作用是实现传输层的多路复用和多路分解,在应用层可以同时运行多个进程，每个进程都需要通过传输层来收发分组，而传输层的TCP进程只有一个，当TCP进程收到一个分组后，该怎么确定应该转发给哪个进程呢？答案是通过套接字，这就是多路分解。同样的道理，多路复用就是进程将分组通过各自的套接字转发给传输层。TCP套接字是由一个四元组（源IP地址、源端口号、目的IP地址和目的端口号）来标识的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/HTTP/" rel="tag"># HTTP</a>
+              <a href="/source/tags/TCP-IP/" rel="tag"># TCP/IP</a>
+              <a href="/source/tags/DNS/" rel="tag"># DNS</a>
+              <a href="/source/tags/三次握手四次挥手/" rel="tag"># 三次握手四次挥手</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/45598/" rel="prev" title="HTTP缓存">
+      <i class="fa fa-chevron-left"></i> HTTP缓存
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/40340/" rel="next" title="Event Loop">
+      Event Loop <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤"><span class="nav-number">1.</span> <span class="nav-text">从浏览器地址栏输入URL后回车，背后会进行哪些技术步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单流程"><span class="nav-number">1.1.</span> <span class="nav-text">简单流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">1.2.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-SSL过程"><span class="nav-number">1.3.</span> <span class="nav-text">TLS/SSL过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三次握手-四次挥手"><span class="nav-number">1.4.</span> <span class="nav-text">三次握手/四次挥手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手"><span class="nav-number">1.4.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手"><span class="nav-number">1.4.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-UDP异同"><span class="nav-number">1.5.</span> <span class="nav-text">TCP/UDP异同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器对响应的解析"><span class="nav-number">1.6.</span> <span class="nav-text">浏览器对响应的解析</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dangsenlin" src="/images/ava.png">
+  <p class="site-author-name" itemprop="name">dangsenlin</p>
+  <div class="site-description" itemprop="description">never giveup stronger survival</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dangsenlin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
