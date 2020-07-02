@@ -161,6 +161,180 @@
   
   
   <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/undefined/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/undefined/" class="post-title-link" itemprop="url">webpack流程及原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-15 15:44:09" itemprop="dateCreated datePublished" datetime="2020-06-15T15:44:09+08:00">2020-06-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-28 13:38:49" itemprop="dateModified" datetime="2020-06-28T13:38:49+08:00">2020-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/工具/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>从概念上讲：webpack是一个现代JavaScript应用的静态模块打包工具。
+提到webpack，就不得不提及前端两个重要的概念：<strong>模块</strong>和<strong>打包</strong>。</p>
+<p>&lt;!-- more --&gt;</p>
+<p>模块：</p>
+<ul>
+<li>现在的前端开发都是基于模块化开发的，比如一个项目中除了最重要的.js文件之外，还有各种.css, .less, .png文件以及依赖的外部库。这种模块化方式大大方便了开发者，但是对于浏览器来说只认识.html文件，并不能处理其他各种文件。那么就需要一个工具将他们组合起来，并且能处理好他们之间的复杂关系。这就是webpack的作用。</li>
+<li>关于模块化的一下标准，如：AMD, CMD, CommonJS, ES6. （留个坑，后面深入学习模块化）</li>
+</ul>
+<p>打包：</p>
+<ul>
+<li>有了模块化的概念，打包就容易理解了，就是将webpack中的各种资源模块进行打包合并成一个或多个包(Bundle)。</li>
+<li>并且在打包的过程中，还可以对资源进行处理，比如压缩图片，将scss转成css，将ES6语法转成ES5语法，将TypeScript转成JavaScript等等操作。</li>
+</ul>
+<p>下面开始正文：</p>
+<h1>webpack运行机制</h1>
+<p>webpack的运行过程可以简单概述为如下流程：
+<strong>初始化配置参数 -&gt; 绑定事件钩子回调 -&gt; 确定Entry逐一遍历 -&gt; 使用loader编译文件 -&gt; 输出文件</strong></p>
+<h2>webpack事件流</h2>
+<p>webpack就像工厂里的一条生产线，它是一系列流程化的结果，每个流程的职责是单一的，且每个流程相互依赖。插件就是在特定的流程对资源做处理，所以插件只监听他关心的事件就可以了。webpack通过&lt;font color=&quot;red&quot;&gt;Tapable&lt;/font&gt;组织这条流水线.
+Tapable的原理通过<em>发布者-订阅者</em>模式实现,核心代码类似：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class SyncHook&#123;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        this.hooks = [];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 订阅事件</span><br><span class="line">    tap(name, fn)&#123;</span><br><span class="line">        this.hooks.push(fn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 发布</span><br><span class="line">    call()&#123;</span><br><span class="line">        this.hooks.forEach(hook =&gt; hook(...arguments));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是，webpack4.0之前是基于Tapable1.0实现的，所以4.0前后有很大区别，需分别学习。</p>
+<p>先上一张图:
+<img src="https://imgkr.cn-bj.ufileos.com/2b8a3342-199b-4459-8012-c9f72735a273.jpg" alt="pic">
+简要概述：</p>
+<ol>
+<li>读取webpack.config.js文件，初始化参数，实例化插件，生成Compiler传入插件的apply方法，为webpack事件流挂上自定义钩子。</li>
+<li>entryOption阶段：读取配置的entries, 递归遍历所有入口文件。</li>
+<li>compilation阶段：进入每一个入口文件(entry),使用loader进行内容编译(buildModule),再将编译好的内容使用acorn解析生成ATS(normalModuleLoader),分析依赖关系逐个拉去依赖并重复上述过程，最后将require替换成__webpack_require__。</li>
+<li>emit阶段：所有文件的编译和转化完成，可以从<code>compilation.assets</code>拿到结果。</li>
+</ol>
+<p>webpack结果分析：
+dist目录下main.js文件如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">(function (modules) &#123;</span><br><span class="line">  //  缓存已经加载过的module的exports</span><br><span class="line">  //  module在exports之前还是有js需要执行的，缓存的目的就是优化这一过程</span><br><span class="line">  // The module cache</span><br><span class="line">  var installedModules = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  // The require function</span><br><span class="line">  /**</span><br><span class="line">   * 模拟CommonJS require()</span><br><span class="line">   * @param &#123;String&#125; moduleId 模块路径</span><br><span class="line">   */</span><br><span class="line">  function __webpack_require__(moduleId) &#123;</span><br><span class="line"></span><br><span class="line">    // Check if module is in cache</span><br><span class="line">    if (installedModules[moduleId]) &#123;</span><br><span class="line">      return installedModules[moduleId].exports;</span><br><span class="line">    &#125;</span><br><span class="line">    // Create a new module (and put it into the cache)</span><br><span class="line">    var module = installedModules[moduleId] = &#123;</span><br><span class="line">      i: moduleId,</span><br><span class="line">      l: false,</span><br><span class="line">      exports: &#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // 执行单个module JS Function并填充installedModules与module</span><br><span class="line">    // function mudule(module, __webpack_exports__[, __webpack_require__])</span><br><span class="line">    // Execute the module function</span><br><span class="line">    modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);</span><br><span class="line"></span><br><span class="line">    // Flag the module as loaded</span><br><span class="line">    module.l = true;</span><br><span class="line"></span><br><span class="line">    // Return the exports of the module</span><br><span class="line">    return module.exports;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // expose the modules object (__webpack_modules__)</span><br><span class="line">  __webpack_require__.m = modules;</span><br><span class="line"></span><br><span class="line">  // expose the module cache</span><br><span class="line">  __webpack_require__.c = installedModules;</span><br><span class="line"></span><br><span class="line"> ......</span><br><span class="line"></span><br><span class="line">  // __webpack_public_path__</span><br><span class="line">  __webpack_require__.p = &quot;&quot;;</span><br><span class="line"></span><br><span class="line">  // 加载Entry并返回Entry的exports</span><br><span class="line">  // Load entry module and return exports</span><br><span class="line">  return __webpack_require__(__webpack_require__.s = &quot;./src/index.js&quot;);</span><br><span class="line">&#125;)</span><br><span class="line">  // modules其实就是一个对象，键是模块的路径，值就是模块的JS Function</span><br><span class="line">  (&#123;</span><br><span class="line">    &quot;./src/index.js&quot;: function (module, __webpack_exports__, __webpack_require__) &#123;</span><br><span class="line">      &quot;use strict&quot;;</span><br><span class="line">      eval(&quot;__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _module_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module.js */ \&quot;./src/module.js\&quot;);\n/* harmony import */ var _module_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_module_js__WEBPACK_IMPORTED_MODULE_0__);\n&#123;&#125;;\nconsole.log(_module_js__WEBPACK_IMPORTED_MODULE_0___default.a.s);\n\n//# sourceURL=webpack:///./src/index.js?&quot;);</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;./src/module.js&quot;: function (module, exports) &#123;</span><br><span class="line">      eval(&quot;&#123;&#125;;var s = 123;\nconsole.log(s);\nmodule.exports = &#123;\n  s: s\n&#125;;\n\n//# sourceURL=webpack:///./src/module.js?&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>webpack的本质是生成一个js文件，最终结果是一个立即执行函数，引入的所有模块都被一个function给包起来组装成一个对象，这个对象作为IIFE的实参被传递进去。</p>
+<h1>Tapable详解</h1>
+<p>前面已经简单介绍过Tapable,webpack中最核心的负责编译的Compiler和负责创建bundles的Compilation都是Tapable的实例.
+webpack4.0（Tapable1.0）之后，Tapable向外暴露出许多钩子，可以使用他们为插件创建钩子函数：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const &#123;</span><br><span class="line">	SyncHook,</span><br><span class="line">	SyncBailHook,</span><br><span class="line">	SyncWaterfallHook,</span><br><span class="line">	SyncLoopHook,</span><br><span class="line">	AsyncParallelHook,</span><br><span class="line">	AsyncParallelBailHook,</span><br><span class="line">	AsyncSeriesHook,</span><br><span class="line">	AsyncSeriesBailHook,</span><br><span class="line">	AsyncSeriesWaterfallHook</span><br><span class="line"> &#125; = require(&quot;tapable&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>常用的钩子主要包含以下几种，分为同步和异步，异步又分为并发执行和串行执行，如下图:
+<img src="https://imgkr.cn-bj.ufileos.com/c99ac538-952c-44a8-8649-26a44fd421ac.jpg" alt="hooks">
+<a href="https://juejin.im/post/5abf33f16fb9a028e46ec352" target="_blank" rel="noopener">钩子详细参考</a>
+使用的一个例子：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Order &#123;</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        this.hooks = &#123; //hooks</span><br><span class="line">            goods: new SyncHook([&apos;goodsId&apos;, &apos;number&apos;]),</span><br><span class="line">            consumer: new AsyncParallelHook([&apos;userId&apos;, &apos;orderId&apos;])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    queryGoods(goodsId, number) &#123;</span><br><span class="line">        this.hooks.goods.call(goodsId, number);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    consumerInfoPromise(userId, orderId) &#123;</span><br><span class="line">        this.hooks.consumer.promise(userId, orderId).then(() =&gt; &#123;</span><br><span class="line">            //TODO</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    consumerInfoAsync(userId, orderId) &#123;</span><br><span class="line">        this.hooks.consumer.callAsync(userId, orderId, (err, data) =&gt; &#123;</span><br><span class="line">            //TODO</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于所有的hook的构造函数均接受一个可选的string类型的数组.
+<code>const hook = new SyncHook([&quot;arg1&quot;, &quot;arg2&quot;, &quot;arg3&quot;]);</code>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 调用tap方法注册一个consument</span><br><span class="line">order.hooks.goods.tap(&apos;QueryPlugin&apos;, (goodsId, number) =&gt; &#123;</span><br><span class="line">    return fetchGoods(goodsId, number);</span><br><span class="line">&#125;)</span><br><span class="line">// 再添加一个</span><br><span class="line">order.hooks.goods.tap(&apos;LoggerPlugin&apos;, (goodsId, number) =&gt; &#123;</span><br><span class="line">    logger(goodsId, number);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 调用</span><br><span class="line">order.queryGoods(&apos;10000000&apos;, 1)</span><br></pre></td></tr></table></figure></p>
+<p>对于一个 SyncHook,我们通过tap来添加消费者，通过call来触发钩子的顺序执行。
+对于一个非sync<em>类型的钩子，即async</em>类型的钩子，我们还可以通过其它方式注册消费者和调用.
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// 注册一个sync 钩子</span><br><span class="line">order.hooks.consumer.tap(&apos;LoggerPlugin&apos;, (userId, orderId) =&gt; &#123;</span><br><span class="line">   logger(userId, orderId);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">order.hooks.consumer.tapAsync(&apos;LoginCheckPlugin&apos;, (userId, orderId, callback) =&gt; &#123;</span><br><span class="line">    LoginCheck(userId, callback);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">order.hooks.consumer.tapPromise(&apos;PayPlugin&apos;, (userId, orderId) =&gt; &#123;</span><br><span class="line">    return Promise.resolve();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 调用</span><br><span class="line">// 返回Promise</span><br><span class="line">order.consumerInfoPromise(&apos;user007&apos;, &apos;1024&apos;);</span><br><span class="line"></span><br><span class="line">//回调函数</span><br><span class="line">order.consumerInfoAsync(&apos;user007&apos;, &apos;1024&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>对于Sync*类型的钩子来说。
+注册在该钩子下面的插件的执行顺序都是顺序执行。
+只能使用tap注册，不能使用tapPromise和tapAsync注册
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 所有的钩子都继承于Hook</span><br><span class="line">class Sync* extends Hook &#123; </span><br><span class="line">	tapAsync() &#123; // Sync*类型的钩子不支持tapAsync</span><br><span class="line">		throw new Error(&quot;tapAsync is not supported on a Sync*&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	tapPromise() &#123;// Sync*类型的钩子不支持tapPromise</span><br><span class="line">		throw new Error(&quot;tapPromise is not supported on a Sync*&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	compile(options) &#123; // 编译代码来按照一定的策略执行Plugin</span><br><span class="line">		factory.setup(this, options);</span><br><span class="line">		return factory.create(options);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于Async*类型钩子
+支持tap、tapPromise、tapAsync注册
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class AsyncParallelHook extends Hook &#123;</span><br><span class="line">	constructor(args) &#123;</span><br><span class="line">		super(args);</span><br><span class="line">		this.call = this._call = undefined;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	compile(options) &#123;</span><br><span class="line">		factory.setup(this, options);</span><br><span class="line">		return factory.create(options);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">class Hook &#123;</span><br><span class="line">	constructor(args) &#123;</span><br><span class="line">		if(!Array.isArray(args)) args = [];</span><br><span class="line">		this._args = args; // 实例钩子的时候的string类型的数组</span><br><span class="line">		this.taps = []; // 消费者</span><br><span class="line">		this.interceptors = []; // interceptors</span><br><span class="line">		this.call = this._call =  // 以sync类型方式来调用钩子</span><br><span class="line">		this._createCompileDelegate(&quot;call&quot;, &quot;sync&quot;);</span><br><span class="line">		this.promise = </span><br><span class="line">		this._promise = // 以promise方式</span><br><span class="line">		this._createCompileDelegate(&quot;promise&quot;, &quot;promise&quot;);</span><br><span class="line">		this.callAsync = </span><br><span class="line">		this._callAsync = // 以async类型方式来调用</span><br><span class="line">		this._createCompileDelegate(&quot;callAsync&quot;, &quot;async&quot;);</span><br><span class="line">		this._x = undefined; // </span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	_createCall(type) &#123;</span><br><span class="line">		return this.compile(&#123;</span><br><span class="line">			taps: this.taps,</span><br><span class="line">			interceptors: this.interceptors,</span><br><span class="line">			args: this._args,</span><br><span class="line">			type: type</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	_createCompileDelegate(name, type) &#123;</span><br><span class="line">		const lazyCompileHook = (...args) =&gt; &#123;</span><br><span class="line">			this[name] = this._createCall(type);</span><br><span class="line">			return this[name](...args);</span><br><span class="line">		&#125;;</span><br><span class="line">		return lazyCompileHook;</span><br><span class="line">	&#125;</span><br><span class="line">	// 调用tap 类型注册</span><br><span class="line">	tap(options, fn) &#123;</span><br><span class="line">		// ...</span><br><span class="line">		options = Object.assign(&#123; type: &quot;sync&quot;, fn: fn &#125;, options);</span><br><span class="line">		// ...</span><br><span class="line">		this._insert(options);  // 添加到 this.taps中</span><br><span class="line">	&#125;</span><br><span class="line">	// 注册 async类型的钩子</span><br><span class="line">	tapAsync(options, fn) &#123;</span><br><span class="line">		// ...</span><br><span class="line">		options = Object.assign(&#123; type: &quot;async&quot;, fn: fn &#125;, options);</span><br><span class="line">		// ...</span><br><span class="line">		this._insert(options); // 添加到 this.taps中</span><br><span class="line">	&#125;</span><br><span class="line">	注册 promise类型钩子</span><br><span class="line">	tapPromise(options, fn) &#123;</span><br><span class="line">		// ...</span><br><span class="line">		options = Object.assign(&#123; type: &quot;promise&quot;, fn: fn &#125;, options);</span><br><span class="line">		// ...</span><br><span class="line">		this._insert(options); // 添加到 this.taps中</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>每次都是调用tap、tapSync、tapPromise注册不同类型的插件钩子，通过调用call、callAsync 、promise方式调用。
+其实调用的时候为了按照一定的执行策略执行，调用compile方法快速编译出一个方法来执行这些插件。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const factory = new Sync*CodeFactory();</span><br><span class="line">class Sync* extends Hook &#123; </span><br><span class="line">	// ...</span><br><span class="line">	compile(options) &#123; // 编译代码来按照一定的策略执行Plugin</span><br><span class="line">		factory.setup(this, options);</span><br><span class="line">		return factory.create(options);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Sync*CodeFactory extends HookCodeFactory &#123;</span><br><span class="line">	content(&#123; onError, onResult, onDone, rethrowIfPossible &#125;) &#123;</span><br><span class="line">		return this.callTapsSeries(&#123;</span><br><span class="line">			onError: (i, err) =&gt; onError(err),</span><br><span class="line">			onDone,</span><br><span class="line">			rethrowIfPossible</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://juejin.im/post/5aa3d2056fb9a028c36868aa#heading-3" target="_blank" rel="noopener">Tapable详细参考</a></p>
+<h1>关于loader和plugin</h1>
+<h2>Loader</h2>
+<p>loader只是一个普通的funciton，他会传入匹配到的文件内容(String)，一个最简单的loader大概是这样：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * loader Function</span><br><span class="line"> * @param &#123;String&#125; content 文件内容</span><br><span class="line"> */</span><br><span class="line">module.exports = function(content)&#123;</span><br><span class="line">    return &quot;&#123;&#125;;&quot; + content</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样，loader会去匹配所有以.js后缀结尾的文件并在内容前追加{};这样一段代码，我们可以在输出文件中看到效果：
+<img src="https://imgkr.cn-bj.ufileos.com/c5eb602f-99f5-468a-b4ce-2a6705150b5f.jpg" alt="res">
+loader还有其他一些技巧，比如拿到用户options，异步，缓存等。</p>
+<h2>plugin</h2>
+<p>webpack plugin是一个带有apply方法的class：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//@file: plugins/myplugin.js</span><br><span class="line">class myPlugin &#123;</span><br><span class="line">    constructor(options)&#123;</span><br><span class="line">        //用户自定义配置</span><br><span class="line">        this.options = options</span><br><span class="line">        console.log(this.options)</span><br><span class="line">    &#125;</span><br><span class="line">    apply(compiler) &#123;</span><br><span class="line">        console.log(&quot;This is my first plugin.&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = myPlugin</span><br></pre></td></tr></table></figure></p>
+<h2>关于赋予webpack事件流我们的自定义事件</h2>
+<ol>
+<li>
+<p>引入Tapable并找到你想用的hook，同步hook or 异步hook
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const &#123; SyncHook &#125; = require(&quot;tapable&quot;);</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>实例化Tapable中你所需要的hook并挂载在compiler或compilation上
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compiler.hooks.myHook = new SyncHook([&apos;data&apos;])</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>compiler.hooks.myHook = new SyncHook(['data'])
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">compiler.hooks.myHook.tap(&apos;Listen4Myplugin&apos;, (data) =&gt; &#123;</span><br><span class="line">    console.log(&apos;@Listen4Myplugin&apos;, data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>在你所需要广播事件的时机执行call方法并传入数据
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">compiler.hooks.environment.tap(pluginName, () =&gt; &#123;</span><br><span class="line">       //广播自定义事件</span><br><span class="line">       compiler.hooks.myHook.call(&quot;It&apos;s my plugin.&quot;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+</li>
+</ol>
+<p>实例:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// @file: plugins/myplugin.js</span><br><span class="line">const pluginName = &apos;MyPlugin&apos;</span><br><span class="line">// tapable是webpack自带的package，是webpack的核心实现</span><br><span class="line">// 不需要单独install，可以在安装过webpack的项目里直接require</span><br><span class="line">// 拿到一个同步hook类</span><br><span class="line">const &#123; SyncHook &#125; = require(&quot;tapable&quot;);</span><br><span class="line">class MyPlugin &#123;</span><br><span class="line">    // 传入webpack config中的plugin配置参数</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        // &#123; test: 1 &#125;</span><br><span class="line">        console.log(&apos;@plugin constructor&apos;, options);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    apply(compiler) &#123;</span><br><span class="line">        console.log(&apos;@plugin apply&apos;);</span><br><span class="line">        // 实例化自定义事件</span><br><span class="line">        compiler.hooks.myPlugin = new SyncHook([&apos;data&apos;])</span><br><span class="line"></span><br><span class="line">        compiler.hooks.environment.tap(pluginName, () =&gt; &#123;</span><br><span class="line">            //广播自定义事件</span><br><span class="line">            compiler.hooks.myPlugin.call(&quot;It&apos;s my plugin.&quot;)</span><br><span class="line">            console.log(&apos;@environment&apos;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        // compiler.hooks.compilation.tap(pluginName, (compilation) =&gt; &#123;</span><br><span class="line">            // 你也可以在compilation上挂载hook</span><br><span class="line">            // compilation.hooks.myPlugin = new SyncHook([&apos;data&apos;])</span><br><span class="line">            // compilation.hooks.myPlugin.call(&quot;It&apos;s my plugin.&quot;)</span><br><span class="line">        // &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">module.exports = MyPlugin</span><br></pre></td></tr></table></figure></p>
+<p>在监听插件里监听我的自定义事件
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// @file: plugins/listen4myplugin.js</span><br><span class="line">class Listen4Myplugin &#123;</span><br><span class="line">    apply(compiler) &#123;</span><br><span class="line">        // 在myplugin environment 阶段被广播</span><br><span class="line">        compiler.hooks.myPlugin.tap(&apos;Listen4Myplugin&apos;, (data) =&gt; &#123;</span><br><span class="line">            console.log(&apos;@Listen4Myplugin&apos;, data)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = Listen4Myplugin</span><br></pre></td></tr></table></figure></p>
+<p>在webpack配置里引入两个插件并实例化
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// @file: webpack.config.js</span><br><span class="line">const MyPlugin = require(&apos;./plugins/myplugin-4.js&apos;)</span><br><span class="line">const Listen4Myplugin = require(&apos;./plugins/listen4myplugin.js&apos;)</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    ......,</span><br><span class="line">    plugins: [</span><br><span class="line">        new MyPlugin(&quot;Plugin is instancing.&quot;),</span><br><span class="line">        new Listen4Myplugin()</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果：
+<img src="https://imgkr.cn-bj.ufileos.com/16a98e4d-5d11-447c-a508-a1a6a20ab9ba.jpg" alt="res"></p>
+<p><a href="https://juejin.im/post/5badd0c5e51d450e4437f07a#heading-20" target="_blank" rel="noopener">参考1</a>
+<a href="https://juejin.im/post/5aa3d2056fb9a028c36868aa#heading-5" target="_blank" rel="noopener">参考2</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/48583/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -210,14 +384,129 @@
 
       
           <p>前端安全是一个很值得关注的焦点，现对XSS与CSRF稍做总结.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/48583/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<p>&lt;!-- more --&gt;</p>
+<h1>XSS</h1>
+<h2>XSS简介</h2>
+<p>一言以蔽之：<strong>XSS攻击就是页面被注入了恶意的代码</strong> 。利用这些恶意代码，攻击者可以获取用户的Cookie等，危害数据安全。至于通过哪些方法&quot;注入&quot;？来看XSS分类：</p>
+<h2>XSS分类</h2>
+<p>根据攻击来源，XSS攻击可分为<strong>反射型</strong>，<strong>存储型</strong>，<strong>DOM型</strong>三种。</p>
+<h3>存储型</h3>
+<p>存储型XSS的攻击步骤：</p>
+<ol>
+<li>攻击者将恶意代码提交到目标网站的数据库中。</li>
+<li>用户打开目标网站时，网站服务端将恶意代码从数据库取出，拼接在 HTML 中返回给浏览器。</li>
+<li>用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。</li>
+<li>恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。
+这种攻击常见于带有用户保存数据的网站功能，如论坛发帖、商品评论、用户私信等。</li>
+</ol>
+<h3>反射型</h3>
+<p>反射型XSS的攻击步骤：</p>
+<ol>
+<li>攻击者构造出特殊的 URL，其中包含恶意代码。</li>
+<li>用户打开带有恶意代码的 URL 时，网站服务端将恶意代码从 URL 中取出，拼接在 HTML 中返回给浏览器。</li>
+<li>用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。</li>
+<li>恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。
+反射型 XSS 跟存储型 XSS 的区别是：存储型 XSS 的恶意代码存在数据库里，反射型 XSS 的恶意代码存在 URL 里。
+反射型 XSS 漏洞常见于通过 URL 传递参数的功能，如网站搜索、跳转等。</li>
+</ol>
+<h3>DOM型</h3>
+<p>DOM型XSS的攻击步骤：</p>
+<ol>
+<li>比如前端有有一个页面是通过获取input的value再显示到一个div中。</li>
+<li>攻击者输入的一段script代码。</li>
+<li>前端会将这一段script代码当成字符串解析并拼接到页面中，但是恶意代码将会执行。
+DOM 型 XSS 跟前两种 XSS 的区别：DOM 型 XSS 攻击中，取出和执行恶意代码由浏览器端完成，属于前端 JavaScript 自身的安全漏洞，而其他两种 XSS 都属于服务端的安全漏洞。</li>
+</ol>
+<h2>XSS攻击的预防</h2>
+<p>通过以上可知，XSS有两大要素：</p>
+<ol>
+<li>攻击者提交恶意代码</li>
+<li>浏览器执行恶意代码</li>
+</ol>
+<h3>输入过滤</h3>
+<p>针对第一点，将用户的输入进行过滤，可不可行呢？
+答：攻击者一旦绕过前端，直接构造请求，就可以提交恶意代码了。
+那么在服务端写入数据库之前进行过滤呢？
+答：服务端将转义后的数据发给前端，前端有时可以接受转义后的数据（比如HTML片段），有时是不能接受的(比如通过AJAX返回的Json数据赋给了一个变量)。
+当然，对于明确的输入类型，例如数字、URL、电话号码、邮件地址等等内容，进行输入过滤还是必要的。</p>
+<p>既然输入过滤并非完全可靠，我们就要通过“防止浏览器执行恶意代码”来防范 XSS。这部分分为两类：</p>
+<ul>
+<li>防止 HTML 中出现注入。</li>
+<li>防止 JavaScript 执行时，执行恶意代码。</li>
+</ul>
+<h3>反射型和存储型</h3>
+<p>存储型和反射型 XSS 都是在服务端取出恶意代码后，插入到响应 HTML 里的，攻击者刻意编写的“数据”被内嵌到“代码”中，被浏览器所执行。预防这两种漏洞，有两种常见做法：</p>
+<ul>
+<li>改成纯前端渲染，把代码和数据分隔开。</li>
+<li>对 HTML 做充分转义。</li>
+</ul>
+<h4>纯前端渲染</h4>
+<p>过程：</p>
+<ol>
+<li>前端加载一个完全不依赖于业务数据的HTML.</li>
+<li>之后加载JS代码，严格控制修改到前端的数据，比如明确分类：修改CSS类，修改属性类，修改文本类等。</li>
+</ol>
+<h4>HTML转义</h4>
+<p>如果拼接 HTML 是必要的，就需要采用合适的转义库，对 HTML 模板各处插入点进行充分的转义。</p>
+<h3>DOM型</h3>
+<p>在使用 .innerHTML、.outerHTML、document.write() 时要特别小心，不要把不可信的数据作为 HTML 插到页面上，而应尽量使用 .textContent、.setAttribute() 等。
+DOM 中的内联事件监听器，如 location、onclick、onerror、onload、onmouseover 等，&lt;a&gt; 标签的 href 属性，JavaScript 的 eval()、setTimeout()、setInterval() 等，都能把字符串作为代码运行。如果不可信的数据拼接到字符串中传递给这些 API，很容易产生安全隐患，请务必避免。</p>
+<h3>其他预防措施</h3>
+<h4>Content Security Policy</h4>
+<ul>
+<li>禁止加载外域代码，防止复杂的攻击逻辑。</li>
+<li>禁止外域提交，网站被攻击后，用户的数据不会泄露到外域。</li>
+<li>禁止内联脚本执行（规则较严格，目前发现 GitHub 使用）。</li>
+<li>禁止未授权的脚本执行（新特性，Google Map 移动版在使用）。</li>
+<li>合理使用上报可以及时发现 XSS，利于尽快修复问题。</li>
+</ul>
+<h4>输入内容长度控制</h4>
+<p>对于不受信任的输入，都应该限定一个合理的长度。虽然无法完全防止 XSS 发生，但可以增加 XSS 攻击的难度。</p>
+<h4>其他</h4>
+<ul>
+<li>HTTP-only Cookie: 禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie。</li>
+<li>验证码：防止脚本冒充用户提交危险操作。</li>
+</ul>
+<h2>相关重点总结</h2>
+<p><strong>输入过滤，转义，纯前端渲染，验证码，HttpOnly</strong></p>
+<h1>CSRF</h1>
+<h2>CSRF简介</h2>
+<p>利用受害者在被攻击网站已经获取的注册凭证，绕过后台的用户验证，达到冒充用户对被攻击的网站执行某项操作的目的。</p>
+<p>一个典型的CSRF攻击有着如下的流程：</p>
+<ul>
+<li>受害者登录a.com，并保留了登录凭证（Cookie）。</li>
+<li>攻击者引诱受害者访问了b.com。</li>
+<li>b.com 向 a.com 发送了一个请求：a.com/act=xx。浏览器会…</li>
+<li>a.com接收到请求后，对请求进行验证，并确认是受害者的凭证，误以为是受害者自己发送的请求。</li>
+<li>a.com以受害者的名义执行了act=xx。</li>
+<li>攻击完成，攻击者在受害者不知情的情况下，冒充受害者，让a.com执行了自己定义的操作。</li>
+</ul>
+<h2>CSRF防护</h2>
+<h3>同源检测</h3>
+<p>CSRF大多来自第三方网站，那么禁止外域的请求就可以了。如何判断外域？
+在HTTP协议中，每一个一步请求都会携带两个Header，如下</p>
+<ul>
+<li><strong>Origin Header</strong></li>
+<li><strong>Referer Header</strong>
+简单来说就是通过验证上面两个参数来判断是否同源。</li>
+</ul>
+<h3>CSRF Token</h3>
+<ul>
+<li>首先，用户打开页面的时候，服务器需要给这个用户生成一个Token，该Token通过加密算法对数据进行加密,显然在提交时Token不能再放在Cookie中了为了安全起见Token最好还是存在服务器的Session中，之后在每次页面加载时，使用JS遍历整个DOM树，对于DOM中所有的a和form标签后加入Token。这样可以解决大部分的请求，但是对于在页面加载之后动态生成的HTML代码，这种方法就没有作用，还需要程序员在编码时手动添加Token。</li>
+<li>页面提交的请求携带这个Token</li>
+<li>服务端验证Token</li>
+</ul>
+<h3>Samesite Cookie属性</h3>
+<p>从源头上解决这个问题，Google起草了一份草案来改进HTTP协议，那就是为Set-Cookie响应头新增Samesite属性，它用来标明这个 Cookie是个“同站 Cookie”，同站Cookie只能作为第一方Cookie，不能作为第三方Cookie，Samesite 有两个属性值，分别是 Strict 和 Lax：
+<strong>Samesite=Strict</strong>
+种称为严格模式，表明这个 Cookie 在任何情况下都不可能作为第三方 Cookie
+<strong>Samesite=Lax</strong>
+这种称为宽松模式，比 Strict 放宽了点限制：假如这个请求是这种请求（改变了当前页面或者打开了新页面）且同时是个GET请求，则这个Cookie可以作为第三方Cookie
+Samesite的问题：子域不能使用</p>
+<p>详细参考：
+<a href="https://juejin.im/post/5bad9140e51d450e935c6d64#heading-18" target="_blank" rel="noopener">XSS</a>
+<a href="https://juejin.im/post/5bc009996fb9a05d0a055192#heading-20" target="_blank" rel="noopener">CSRF</a></p>
+
       
     </div>
 
@@ -291,14 +580,68 @@
 
       
           <p>最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/13927/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<p>&lt;!-- more --&gt;</p>
+<h1>ESLint的作用</h1>
+<p>第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：</p>
+<ul>
+<li>有利于自己代码风格的形成而不至于放飞自我</li>
+<li>在团队中形成规范，能减少不同环境等造成的bug</li>
+</ul>
+<h1>ESLint的使用</h1>
+<ol>
+<li>配置注释： 使用JavaScript注释将配置信息直接嵌入到文件里</li>
+<li>配置文件： 有多种文件类型，以<code>.eslintrc.js</code>为常见，还有<code>.eslintrc.yaml</code>,<code>.eslintrc.json</code>等</li>
+<li>在<code>package.json</code>文件中创建<code>eslintConfig</code>属性</li>
+</ol>
+<p><em>.yaml：YAML任然是一种标记语言，多用于配置文件</em></p>
+<h1>结合一个例子说明</h1>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// .eslintrc.js</span><br><span class="line">module.exports = &#123;</span><br><span class="line">    // 指定解析器</span><br><span class="line">    &apos;parse&apos;: &apos;&apos;,</span><br><span class="line">    // 指定解析器选项</span><br><span class="line">    &apos;parserOptions&apos;: &#123;&#125;,</span><br><span class="line">    // 指定脚本的运行环境</span><br><span class="line">    &apos;env&apos;: &#123;&#125;,</span><br><span class="line">    // 别人可以直接使用你配置好的ESLint</span><br><span class="line">    &apos;root&apos;: true,</span><br><span class="line">    // 脚本在执行期间访问的额外的全局变量</span><br><span class="line">    &apos;globals&apos;: &#123;&#125;,</span><br><span class="line">    // 启用的规则及其各自的错误级别</span><br><span class="line">    &apos;rules&apos;: &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>关于各属性：</p>
+<ol>
+<li>
+<p>选择器选项（parserOptions）
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;parserOptions&quot;: &#123;</span><br><span class="line">    &quot;ecmaVersion&quot;: 6, //ES的版本，默认为5</span><br><span class="line">    &quot;sourceType&quot;: &quot;module&quot;, //指定源代码存在的位置，script | module，默认为script。</span><br><span class="line">    &quot;ecmaFeatures&quot;: &#123; //指定要使用其他那些语言对象</span><br><span class="line">        &quot;experimentalObjectRestSpread&quot;: true,//启用对对象的扩展</span><br><span class="line">        &quot;jsx&quot;: true, //启用jsx语法</span><br><span class="line">        &quot;globalReturn&quot;:true, //允许return在全局使用</span><br><span class="line">        &quot;impliedStrict&quot;:true //启用严格校验模式</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>解析器(parser),默认使用Espree
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser&quot;: &quot;babel-eslint&quot;,</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>环境配置（env）,默认都为false, 但设置环境并不冲突，如<code>node, brower, commonjs</code></p>
+</li>
+<li>
+<p>插件（plugins)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;plugins&quot;: [&quot;standard&quot;,&quot;promise&quot;,&quot;react&quot;],</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>全局变量（globals), true表示可以被覆盖，false表示不允许覆盖
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;globals&quot;: &#123;</span><br><span class="line">&quot;document&quot;: true,</span><br><span class="line">&quot;navigator&quot;: true,</span><br><span class="line">&quot;window&quot;: true,</span><br><span class="line">&quot;think&quot;: true</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>自定义规则（setting）
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;settings&quot;: &#123;</span><br><span class="line">&quot;sharedData&quot;: &quot;Hello&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>禁用持续查找（root）,默认情况下，ESLint将在根目录下的所有父文件夹中查找配置文件。该属性的作用是一旦发现了配置文件就停止对父文件夹的查找
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;root&quot;: true</span><br></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>共享配置（extents）,该属性可以是eslint命令，也可以是继承文件的路径。 eslint:all:表示引入当前版本eslint的所有核心规则。 eslint:recommended:表示引入eslint的核心功能，并且报告一些常见的共同错误。 如果值为绝对或相对路径则相当于导入路径对应的规则配置。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extends&quot;: recommended,</span><br></pre></td></tr></table></figure></p>
+</li>
+</ol>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;extends&quot;: &quot;./eslint-config-public.js&quot;,</span><br></pre></td></tr></table></figure></p>
+<h1>重要规则：</h1>
+<p>**
+&quot;off&quot;或0： 关闭规则
+&quot;warn&quot;或1： 警告
+&quot;error&quot;或2： 错误
+**</p>
+<h1>一些常见的rules:</h1>
+<p><code>'camelcase': 0,</code>  驼峰命名
+<code>'eqeqeq': 0</code>  全等</p>
+<p>其他详见官方文档</p>
+
       
     </div>
 
@@ -371,15 +714,43 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="JavaScript中的闭包是什么？"><a href="#JavaScript中的闭包是什么？" class="headerlink" title="JavaScript中的闭包是什么？"></a>JavaScript中的闭包是什么？</h2><p>我对闭包的理解就是<strong>能够访问其他函数中变量的函数</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/39246/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h2>JavaScript中的闭包是什么？</h2>
+<p>我对闭包的理解就是<strong>能够访问其他函数中变量的函数</strong></p>
+<p>&lt;!-- more --&gt;</p>
+<p>顺带有个名词<em>自由变量</em>解释一下就是：函数中既不是参数也不是局部变量的参数，实际上就是上面的<em>其他函数中的变量</em>,具体就是比如一个父函数中有一些变量和子函数，那么这些变量相对于子函数就相当于<em>自由变量</em>,因为子函数能够访问这些变量，构成了上述<em>访问其他函数中变量</em>的条件，所以子函数就构成了一个闭包。</p>
+<h2>实现：</h2>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function foo()&#123;</span><br><span class="line">  var a = 2</span><br><span class="line">  function bar()&#123;</span><br><span class="line">    console.log(a)</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  return bar</span><br><span class="line">&#125;</span><br><span class="line">var baz = foo()</span><br><span class="line"></span><br><span class="line">baz()		// 2</span><br></pre></td></tr></table></figure></p>
+<p>上面父函数foo执行完了其内存应该被回收了，但是执行baz()依然能访问到foo的内部变量<strong>a</strong>,这是因为返回值是一个函数，它保存了父函数中的变量，这就构成了<strong>闭包</strong>,这也是闭包最简单最生动的例子。</p>
+<h2>经典问题</h2>
+<p>有一个经典的问题，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(var i=0; i&lt;10; i++)&#123;</span><br><span class="line">    setTimeout(function timer()&#123;</span><br><span class="line">        console.log( i )</span><br><span class="line">    &#125;, i*1000)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>解决办法：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for(var i=0; i&lt;10; i++)&#123;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        setTimeout(function timer()&#123;</span><br><span class="line">            console.log( i )</span><br><span class="line">        &#125;, i*1000)</span><br><span class="line">    &#125;)(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里偷学长两张图解释：
+<img src="https://imgkr.cn-bj.ufileos.com/ee6b40ad-4e1d-4873-af58-fb5542af08ac.png" alt="pic1">
+两层作用域：1和2。2中10个延迟函数共同引用上层的一个<code>i</code>,又由于<code>var</code>并不是块级的，所以就相当于在花括号外边找<code>i</code>,<strong>只能找到一个循环完的i(10)</strong>,所以打印十个10。
+关于解决：
+<img src="https://imgkr.cn-bj.ufileos.com/1d4c1097-0ce7-4578-987d-92eb4dd44e39.png" alt="pic">
+IIEF(立即执行函数)又生成了一层作用域，它保存了遍历的正确的<code>i</code>,第三层再从第二层拿到正确的<code>i</code>所以就打印正确了。</p>
+<h2>闭包中的this</h2>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var name = &quot;The Window&quot;;</span><br><span class="line"></span><br><span class="line">var obj = &#123;</span><br><span class="line">  name: &quot;My Object&quot;,</span><br><span class="line">  </span><br><span class="line">  getName: function()&#123;</span><br><span class="line">    return function()&#123;</span><br><span class="line">      return this.name;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(obj.getName()());  // The Window</span><br></pre></td></tr></table></figure></p>
+<p>obj.getName()()实际上是在全局作用域中调用了匿名函数，this指向了window。这里要理解函数名与函数功能（或者称函数值）是分割开的，不要认为函数在哪里，其内部的this就指向哪里。<strong>匿名函数的执行环境具有全局性</strong>，因此其 this 对象通常指向 window。</p>
+<h2>闭包的应用</h2>
+<ul>
+<li>闭包的主要引用场合：1.设计私有方法和变量 2.构建命名空间，防止全局变量污染</li>
+</ul>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function Animal()&#123;</span><br><span class="line">  </span><br><span class="line">  // 私有变量</span><br><span class="line">  var series = &quot;哺乳动物&quot;;</span><br><span class="line">  function run()&#123;</span><br><span class="line">    console.log(&quot;Run!!!&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  // 特权方法</span><br><span class="line">  this.getSeries = function()&#123;</span><br><span class="line">    return series;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面就通过闭包访问到了私有变量</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var objEvent = objEvent || &#123;&#125;;</span><br><span class="line">(function()&#123; </span><br><span class="line">    var addEvent = function()&#123; </span><br><span class="line">      // some code</span><br><span class="line">    &#125;;</span><br><span class="line">    function removeEvent()&#123;</span><br><span class="line">      // some code</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    objEvent.addEvent = addEvent;</span><br><span class="line">    objEvent.removeEvent = removeEvent;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>这里<code>addEvent</code> 和 <code>emoveEvent</code> 是局部变量，<code>objEvent</code>是全局变量，我们通过闭包把访问他们的方法加到了全局变量上，有效防止全局变量污染。</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">var singleton = (function()&#123;</span><br><span class="line">  </span><br><span class="line">  // 私有变量</span><br><span class="line">  var age = 22;</span><br><span class="line">  var speak = function()&#123;</span><br><span class="line">    console.log(&quot;speaking!!!&quot;);</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  // 特权（或公有）属性和方法</span><br><span class="line">  return &#123;</span><br><span class="line">    name: &quot;percy&quot;,</span><br><span class="line">    getAge: function()&#123;</span><br><span class="line">      return age;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>上面使用闭包创建了单例</p>
+<h2>优缺点</h2>
+<p>优点：实现封装和缓存
+缺点：由于缓存消耗内存</p>
+<p><em>关于闭包的还涉及了很多知识点，比如作用域，内存回收，后面再补</em>
+<a href="https://segmentfault.com/a/1190000006875662" target="_blank" rel="noopener">详细参考</a></p>
+
       
     </div>
 
@@ -453,14 +824,97 @@
 
       
           <p>babel做了什么？是怎么做的？简单来说就是babel把JavaScript中ES2015等新语法转化为es5,让低端运行环境能够识执行。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/ab673b5e/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<p>&lt;!-- more --&gt;</p>
+<h2>babel入门</h2>
+<h3>babel的运行方式</h3>
+<ul>
+<li>命令行运行</li>
+<li>插件作用于构建工具（webpack等）</li>
+</ul>
+<h3>ES6新语法和API</h3>
+<p>ES6新标准可以分为两部分：语法和API。新语法箭头函数和解构，例：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const fn = () =&gt; &#123;&#125;</span><br><span class="line"></span><br><span class="line">const arr2 = [...arr1]</span><br></pre></td></tr></table></figure></p>
+<p>新API例如Promise，Map等，例:
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const m = new Map()</span><br><span class="line"></span><br><span class="line">const p = new Promise(() =&gt; &#123;&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3>@babel/core</h3>
+<p>@babel/core是babel的核心，先安装这个包：
+<code>npm install @babel/core</code>
+它的作用就是根据我们的配置文件转换代码，配置文件通常为<code>.babelrc</code>（静态文件）或者<code>babel.config.js</code>（可编程）
+如果在命令行使用需安装babel命令行工具：
+<code>npm install @babel/cli</code></p>
+<h3>Plugins和Preset</h3>
+<p>babel是基于插件架构的，假如你什么插件也不提供，那么babel什么也不会做，即你输入什么输出的依然是什么。那么我们现在想要把剪头函数转换为es5函数只需要提供一个箭头函数插件就可以了：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/* .babelrc */</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"plugins"</span>: [<span class="string">"@babel/plugin-transform-arrow-functions"</span>]    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码就相当于给当前babel配置了一个箭头函数转化插件（当然需要先安装），运行babel就可以转化箭头函数了。如果我们比如还想解构怎么办？很简单，给Babel配置一个解构插件就可以了：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/* .babelrc */</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"plugins"</span>: [</span><br><span class="line">    <span class="string">"@babel/plugin-transform-arrow-functions"</span>,</span><br><span class="line">    <span class="string">"@babel/plugin-transform-destructuring"</span></span><br><span class="line">  ]    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时候你可能有疑惑了：如果我需要很多功能，那我岂不是要知道每个插件的名字再配置上？Babel的解决办法是<code>preset-env</code>
+<code>preset</code>可以理解为一组插件的集合，因为常用，所以不必重复定义和安装。preset分为</p>
+<ul>
+<li>官方内容，包括env,flow,react等，最重要的是<strong>env</strong></li>
+<li>stage-x, 包含当年最新草案的规范，0 ~ 4五个级别，分别表示从想法到规范</li>
+<li>es201x, latest 暂且不表</li>
+</ul>
+<h4>执行顺序</h4>
+<p>几条原则：</p>
+<ul>
+<li>Plugin 会运行再 Preset之前</li>
+<li>Plugin 从前到后执行</li>
+<li>Preset 从后到前执行</li>
+</ul>
+<p><em>preset 的逆向顺序主要是为了保证向后兼容，因为大多数用户的编写顺序是 ['es2015', 'stage-0']。这样必须先执行 stage-0 才能确保 babel 不报错。因此我们编排 preset 的时候，也要注意顺序，其实只要按照规范的时间顺序列出即可。</em></p>
+<h4><strong>env（重点）</strong></h4>
+<p>env 的核心目的是通过配置得知目标环境的特点，然后只做必要的转换。
+下面列出几种比较常用的配置方法：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [</span><br><span class="line">    [&quot;env&quot;, &#123;</span><br><span class="line">      &quot;targets&quot;: &#123;</span><br><span class="line">        &quot;browsers&quot;: [&quot;last 2 versions&quot;, &quot;safari &gt;= 7&quot;]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上代码考虑所有浏览器的最新两个版本，将必要的代码进行转化，而已有的功能不进行转化
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [</span><br><span class="line">    [&quot;env&quot;, &#123;</span><br><span class="line">      &quot;targets&quot;: &#123;</span><br><span class="line">        &quot;node&quot;: &quot;6.10&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上配置将目标设置为 nodejs，并且支持 6.10 及以上的版本。</p>
+<h3>@babel/polyfill</h3>
+<p>关于新语法的API，是需要<code>polyfill</code>进行转化的，如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/* test.js */</span><br><span class="line">import &apos;@babel/polyfill&apos;</span><br><span class="line"></span><br><span class="line">const fn = () =&gt; &#123;&#125;</span><br><span class="line">new Promise(() =&gt; &#123;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>但这样也是有问题的，这样会全部引入polyfill，包体积太大，解决办法就是使用之前提到的<em>preset-env</em>按需引入。配置如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/* .babelrc */</span><br><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [</span><br><span class="line">    [&quot;@babel/preset-env&quot;, &#123;</span><br><span class="line">      &quot;modules&quot;: false,</span><br><span class="line">      &quot;useBuiltIns&quot;: &quot;usage&quot;,</span><br><span class="line">      &quot;targets&quot;: &quot;ie &gt;= 8&quot;</span><br><span class="line">    &#125;]</span><br><span class="line">  ]    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>useBuiltIns:usage</code>是按需，全部引入配置成<code>entry</code></p>
+<h3>@babel/runtime</h3>
+<p>有时候语法的转换相对复杂，可能需要一些helper函数，如转换es6的class：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/* test.js */</span><br><span class="line">class Test &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/* test-compiled.js */</span><br><span class="line">function _classCallCheck(instance, Constructor) &#123; if (!(instance instanceof Constructor)) &#123; throw new TypeError(&quot;Cannot call a class as a function&quot;); &#125; &#125;</span><br><span class="line"></span><br><span class="line">var Test = function Test() &#123;</span><br><span class="line">  _classCallCheck(this, Test);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>class需要一个helper函数，每个文件都定义一边这个函数也太浪费了，我们可以把他抽到一个包里，使用时引用就可以了，<em>babel/runtime</em>正好就是做这件事的，并且babel提供了一个插件<code>@babel/plugin-transform-runtime</code>插件帮我们自动引入helper,安装后配置如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/* .babelrc */</span><br><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [</span><br><span class="line">    [&quot;@babel/preset-env&quot;, &#123;</span><br><span class="line">      &quot;modules&quot;: false,</span><br><span class="line">      &quot;useBuiltIns&quot;: &quot;usage&quot;,</span><br><span class="line">      &quot;targets&quot;: &quot;ie &gt;= 8&quot;</span><br><span class="line">    &#125;]</span><br><span class="line">  ],</span><br><span class="line">  &quot;plugins&quot;: [</span><br><span class="line">    &quot;@babel/plugin-transform-runtime&quot;</span><br><span class="line">  ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>重点是这个runtime插件相当于提供了一个沙箱环境，可以在这编写一些类库等公共代码</strong></p>
+<h3>babel-loader</h3>
+<p>和webpack配合时配置如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">module: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: /\.js$/,</span><br><span class="line">      exclude: /(node_modules|bower_components)/,</span><br><span class="line">      loader: &apos;babel-loader&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>传入配置项，将loader行改成如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use: &#123;</span><br><span class="line">  loader: &apos;babel-loader&apos;,</span><br><span class="line">  options: &#123;</span><br><span class="line">    // 配置项在这里</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2>babel深入</h2>
+<h3>babel的工作流程：</h3>
+<p>Babel运行共三个阶段： <strong>解析， 转化，生成</strong>
+Babel插件也相应分为语法插件和转译插件，前者再解析时工作，后者在转化时工作，大部分插件也就是我们要关注的插件是<strong>转译插件</strong></p>
+<h4>解析：</h4>
+<p>将代码解析成抽象语法树（AST），每个js引擎（比如Chrome浏览器中的V8引擎）都有自己的AST解析器，而Babel是通过Babylon实现的。在解析过程中有两个阶段：词法分析和语法分析，词法分析阶段把字符串形式的代码转换为令牌（tokens）流，令牌类似于AST中节点；而语法分析阶段则会把一个令牌流转换成 AST的形式，同时这个阶段会把令牌中的信息转换成AST的表述结构。</p>
+<h4>转化：</h4>
+<p>在这个阶段，Babel接受得到AST并通过babel-traverse对其进行深度优先遍历，在此过程中对节点进行添加、更新及移除操作。这部分也是Babel插件介入工作的部分。</p>
+<h4>生成：</h4>
+<p>将经过转换的AST通过babel-generator再转换成js代码，过程就是深度优先遍历整个AST，然后构建可以表示转换后代码的字符串。</p>
+<h3>抽象语法树（AST）</h3>
+<p>首先我们编写的代码在编译阶段解析成抽象语法树（AST），然后经过一系列的遍历和转换，然后再将转换后的抽象语法树生成为常规的js代码。
+比如代码：
+<img src="https://imgkr.cn-bj.ufileos.com/a9906430-c146-4c53-aaff-d1f198997450.png" alt="code">
+将转化成：
+<img src="https://imgkr.cn-bj.ufileos.com/76a1ca74-d037-4017-8965-e8a2890d9817.png" alt="result">
+并没有列完，还有很多...</p>
+<h3>visitor对象</h3>
+<p>当Babel处理一个节点时，是以访问者的形式获取节点信息，并进行相关操作，这种方式是通过一个visitor对象来完成的，在visitor对象中定义了对于各种节点的访问函数，这样就可以针对不同的节点做出不同的处理。我们编写的Babel插件其实也是通过定义一个实例化visitor对象处理一系列的AST节点来完成我们对代码的修改操作。举个栗子：
+<code>import { Ajax } from '../lib/utils';</code>
+Babel需要定义的visitor对象：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">visitor: &#123;</span><br><span class="line">            Program: &#123;</span><br><span class="line">                enter(path, state) &#123;</span><br><span class="line">                    console.log(&apos;start processing this module...&apos;);</span><br><span class="line">                &#125;,</span><br><span class="line">                exit(path, state) &#123;</span><br><span class="line">                    console.log(&apos;end processing this module!&apos;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">    	    ImportDeclaration (path, state) &#123;</span><br><span class="line">            	console.log(&apos;processing ImportDeclaration...&apos;);</span><br><span class="line">            	// do something</span><br><span class="line">            &#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p><em>这里有两个重要的参数path，state</em>但比较深入了，暂且不表。</p>
+<p>Babel的JavaScript解析器是babylon。</p>
+<p>详细参考：
+<a href="https://segmentfault.com/a/1190000018721165" target="_blank" rel="noopener">入门1</a>
+<a href="https://juejin.im/post/5c19c5e0e51d4502a232c1c6#heading-1" target="_blank" rel="noopener">入门2</a>
+<a href="https://juejin.im/post/5c21b584e51d4548ac6f6c99#heading-2" target="_blank" rel="noopener">深入</a></p>
+
       
     </div>
 
@@ -534,6 +988,7 @@
 
       
           <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<p></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/posts/4a17b156/#more" rel="contents">
@@ -627,7 +1082,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -640,7 +1095,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

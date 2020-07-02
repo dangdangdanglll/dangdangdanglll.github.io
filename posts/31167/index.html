@@ -20,18 +20,23 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="never giveup stronger survival">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dang&#39;s technology blog">
-<meta property="og:url" content="http://yoursite.com/source/tags/跨域/index.html">
+  <meta name="description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
+<meta name="keywords" content="浏览器渲染">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器渲染过程">
+<meta property="og:url" content="http://yoursite.com/posts/31167/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="never giveup stronger survival">
+<meta property="og:description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/f5440a32-f552-4aaa-a83e-f0621369c413.png">
+<meta property="og:updated_time" content="2020-07-02T08:13:45.757Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dang&#39;s technology blog">
-<meta name="twitter:description" content="never giveup stronger survival">
+<meta name="twitter:title" content="浏览器渲染过程">
+<meta name="twitter:description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
+<meta name="twitter:image" content="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png">
 
-<link rel="canonical" href="http://yoursite.com/source/tags/跨域/">
+<link rel="canonical" href="http://yoursite.com/posts/31167/">
 
 
 <script id="page-configurations">
@@ -39,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 跨域 | dang's technology blog</title>
+  <title>浏览器渲染过程 | dang's technology blog</title>
   
 
 
@@ -153,53 +158,116 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">跨域
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/31167/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浏览器渲染过程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-02 15:12:16 / 修改时间：16:13:45" itemprop="dateCreated datePublished" datetime="2020-07-02T15:12:16+08:00">2020-07-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/浏览器/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+        <p>浏览器拿到服务器的资源是如何处理的？</p>
+<p>&lt;!-- more --&gt;</p>
+<p>资源主要包括HTML,CSS,JS等，先看下图：
+<img src="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png" alt="pic"></p>
+<p>主要步骤：</p>
+<ol>
+<li>根据HTML构建DOM</li>
+<li>根据CSS构建CSSOM</li>
+<li>合并DOM和CSSOM生成Render Tree</li>
+<li>Layout: 根据渲染对象计算出每个对象的尺寸和位置等</li>
+<li>painting： 将上一步的结果渲染到页面上</li>
+</ol>
+<p>window.onload和DOMcontentLoaded有什么区别？</p>
+<ul>
+<li>HTML parser构建完DOM树后document会派发DOMcontentLoaded事件</li>
+<li>所有资源(img等)全部加载完毕才会触发onload事件</li>
+</ul>
+<p>script标签中defer和async分别什么意思？
+<img src="https://imgkr.cn-bj.ufileos.com/f5440a32-f552-4aaa-a83e-f0621369c413.png" alt="pic">
+说明：如果没有defer和async那么script的下载和执行都会阻塞
+有defer下载时不阻塞，会在DOM构建完，DOMcontentLoaded之前执行
+有async下载时不阻塞，下载完立即执行，执行时阻塞</p>
+<p>CSS会阻塞HTML的解析和渲染吗？
+CSS不会阻塞HTML的解析但是会阻塞HTML的渲染，所以感观上CSS会阻塞页面的，且css加载会阻塞后面的js语句的执行</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-27T20:10:35+08:00"
-              content="2020-06-27">
-          06-27
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/浏览器渲染/" rel="tag"># 浏览器渲染</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/56868/" itemprop="url">
-            <span itemprop="name">关于跨域</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/40340/" rel="prev" title="Event Loop">
+      <i class="fa fa-chevron-left"></i> Event Loop
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
