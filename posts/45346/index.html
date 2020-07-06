@@ -20,13 +20,13 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+  <meta name="description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们： &amp;lt;!-- more --&amp;gt; 一个故事 http 假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？ 对称加密 他们商量了一下使用加密的方式,也就是他们都">
 <meta name="keywords" content="http">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于http,https与版本">
 <meta property="og:url" content="http://yoursite.com/posts/45346/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+<meta property="og:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们： &amp;lt;!-- more --&amp;gt; 一个故事 http 假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？ 对称加密 他们商量了一下使用加密的方式,也就是他们都">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://static01.imgkr.com/temp/f2426aa90a0c4aacbfa764b8991c584d.png">
 <meta property="og:image" content="https://static01.imgkr.com/temp/9398591a7b8e4a81a22592e9a320949a.png">
@@ -37,7 +37,7 @@
 <meta property="og:updated_time" content="2020-06-28T05:47:19.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于http,https与版本">
-<meta name="twitter:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：">
+<meta name="twitter:description" content="http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们： &amp;lt;!-- more --&amp;gt; 一个故事 http 假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？ 对称加密 他们商量了一下使用加密的方式,也就是他们都">
 <meta name="twitter:image" content="https://static01.imgkr.com/temp/f2426aa90a0c4aacbfa764b8991c584d.png">
 
 <link rel="canonical" href="http://yoursite.com/posts/45346/">
@@ -224,37 +224,87 @@
 
       
         <p>http,https,对称加密，非对称加密，数字签名，数字证书这些概念除了要知道他们是什么之外，更重要的是知道他们为什么是这样的。从一个故事串联起他们：</p>
-<a id="more"></a>
-<h1 id="一个故事"><a href="#一个故事" class="headerlink" title="一个故事"></a>一个故事</h1><h2 id="http"><a href="#http" class="headerlink" title="http"></a>http</h2><p>假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？</p>
-<h2 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h2><p>他们商量了一下使用加密的方式,也就是他们都有一个<strong>共同</strong>的密钥，在A发送信息之前先将信息通过密钥加密，B收到信息之后用密钥解密就能得到信息了。由于别人没有密钥，只能得到加密过的信息，没有用。但是存在一个问题：如果发送密钥的过程被监听怎么办？</p>
-<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>A和B又使用了一种新的加密方式：加密和解密的密钥是不同的，加密的密钥称之为公钥，解密的密钥称之为私钥，公钥所有人都知道，私钥只有自己知道。当A想要给B发送信息时，先通过B的公钥加密，B得到后再用私密解密。别人只能拿到B的公钥和公钥加密过的信息，没有私密所以无法解密。<br>但是由于非对称加密的速度比对称加密慢几十上百倍，所以一般采用两者结合的方式：先使用非对称加密传输一个对称加密的密钥，之后再通过密钥进行对称加密传输。<br>看似问题解决了，但依然存在一种问题：<em>中间人攻击</em></p>
-<h2 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h2><p>在非对称加密的过程中，在A得知B的公钥过程中，并不能确定这个公钥真的是B的，比如中间人C把自己的公钥发给A，让A以为这个公钥是B的，A发送的信息实际上是通过C的公钥加密过的，C肯定有自己的私钥，不但能指导A发送到信息，还能用B的公钥发送一些假信息，这样A和B都不知道信息已经被篡改了。</p>
-<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>将公钥和个人信息发在一起，称之为证书。A得到B的公钥时查看个人信息，似乎就能防止中间人攻击了。但是证书被篡改怎么办？比如C拿到B的证书之后，修改证书中B的公钥替换成C的，个人信息不变，再发送给A，似乎又有问题了。</p>
-<h2 id="消息摘要"><a href="#消息摘要" class="headerlink" title="消息摘要"></a>消息摘要</h2><p>使用一种新算法Hash加密证书，这种算法的特点是加密过的信息只要修改过一点点就截然不同很容易察觉。所以 <code>证书 + 算法 = 消息摘要</code>以后就发送消息摘要。但是问题又来了：如果C将A的消息摘要整个替换怎么办？</p>
-<h2 id="签名-证书"><a href="#签名-证书" class="headerlink" title="签名 + 证书"></a>签名 + 证书</h2><p>类似于现实世界中的公证处，网络世界也有公证处：CA机构，CA的私钥和公钥大家都认可，公钥很难被替换。<br>终极大招：B将B的消息摘要通过CA私钥加密后得到数字签名，数字签名和消息摘要（证书 + Hash算法）称为数字证书，将数字证书发送给A,A拿到数字证书后先用CA公钥解密得到消息摘要XX,再用相同的Hash算法解密得到消息摘要YY,对比XX和YY似乎就解决了问题。</p>
-<p>总结：<br>防止公钥与人不对应：个人信息 + 公钥 = 证书 —-&gt; 证书被修改<br>防止证书被篡改：证书 + Hash算法 = 消息摘要（只要被修改就能查觉） —–&gt;  替换整个消息摘要<br>防止替换消息摘要：消息摘要 + CA私密加密 = 数字签名， 数字签名 + 消息摘要 = 数字证书<br>  得到数字证书： 用同样的Hash 算法， 再次生成消息摘要，CA的公钥对数字签名解密， 得到CA创建的消息摘要，两者一比。</p>
-<h1 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h1><h2 id="又一个小故事"><a href="#又一个小故事" class="headerlink" title="又一个小故事"></a>又一个小故事</h2><h2 id="RSA加密过程："><a href="#RSA加密过程：" class="headerlink" title="RSA加密过程："></a>RSA加密过程：</h2><ol>
+<p>&lt;!-- more --&gt;</p>
+<h1>一个故事</h1>
+<h2>http</h2>
+<p>假如有两个人A和B,它们之间通信采用了http协议，简单快捷，但是http是明文传输的，他们传输的信息随时有可能轻易被监听，怎么办？</p>
+<h2>对称加密</h2>
+<p>他们商量了一下使用加密的方式,也就是他们都有一个<strong>共同</strong>的密钥，在A发送信息之前先将信息通过密钥加密，B收到信息之后用密钥解密就能得到信息了。由于别人没有密钥，只能得到加密过的信息，没有用。但是存在一个问题：如果发送密钥的过程被监听怎么办？</p>
+<h2>非对称加密</h2>
+<p>A和B又使用了一种新的加密方式：加密和解密的密钥是不同的，加密的密钥称之为公钥，解密的密钥称之为私钥，公钥所有人都知道，私钥只有自己知道。当A想要给B发送信息时，先通过B的公钥加密，B得到后再用私密解密。别人只能拿到B的公钥和公钥加密过的信息，没有私密所以无法解密。
+但是由于非对称加密的速度比对称加密慢几十上百倍，所以一般采用两者结合的方式：先使用非对称加密传输一个对称加密的密钥，之后再通过密钥进行对称加密传输。
+看似问题解决了，但依然存在一种问题：<em>中间人攻击</em></p>
+<h2>中间人攻击</h2>
+<p>在非对称加密的过程中，在A得知B的公钥过程中，并不能确定这个公钥真的是B的，比如中间人C把自己的公钥发给A，让A以为这个公钥是B的，A发送的信息实际上是通过C的公钥加密过的，C肯定有自己的私钥，不但能指导A发送到信息，还能用B的公钥发送一些假信息，这样A和B都不知道信息已经被篡改了。</p>
+<h2>证书</h2>
+<p>将公钥和个人信息发在一起，称之为证书。A得到B的公钥时查看个人信息，似乎就能防止中间人攻击了。但是证书被篡改怎么办？比如C拿到B的证书之后，修改证书中B的公钥替换成C的，个人信息不变，再发送给A，似乎又有问题了。</p>
+<h2>消息摘要</h2>
+<p>使用一种新算法Hash加密证书，这种算法的特点是加密过的信息只要修改过一点点就截然不同很容易察觉。所以 <code>证书 + 算法 = 消息摘要</code>以后就发送消息摘要。但是问题又来了：如果C将A的消息摘要整个替换怎么办？</p>
+<h2>签名 + 证书</h2>
+<p>类似于现实世界中的公证处，网络世界也有公证处：CA机构，CA的私钥和公钥大家都认可，公钥很难被替换。
+终极大招：B将B的消息摘要通过CA私钥加密后得到数字签名，数字签名和消息摘要（证书 + Hash算法）称为数字证书，将数字证书发送给A,A拿到数字证书后先用CA公钥解密得到消息摘要XX,再用相同的Hash算法解密得到消息摘要YY,对比XX和YY似乎就解决了问题。</p>
+<p>总结：
+防止公钥与人不对应：个人信息 + 公钥 = 证书 ----&gt; 证书被修改
+防止证书被篡改：证书 + Hash算法 = 消息摘要（只要被修改就能查觉） -----&gt;  替换整个消息摘要
+防止替换消息摘要：消息摘要 + CA私密加密 = 数字签名， 数字签名 + 消息摘要 = 数字证书
+得到数字证书： 用同样的Hash 算法， 再次生成消息摘要，CA的公钥对数字签名解密， 得到CA创建的消息摘要，两者一比。</p>
+<h1>RSA加密算法</h1>
+<h2>又一个小故事</h2>
+<h2>RSA加密过程：</h2>
+<ol>
 <li>选两个大质数p和q ,N = pq</li>
 <li>r = (p-1)(q-1)</li>
 <li>小于r的数e,求e关于模r的模反元素d</li>
-<li>销毁p,q<br>(N,e)是公钥，(N,d)是私钥</li>
+<li>销毁p,q
+(N,e)是公钥，(N,d)是私钥</li>
 </ol>
-<p>欧拉函数：fn(n) = 小于n的所有n的互质数数目，如fn(8)=4（1,3,5,7）<br>模反元素：如果两个正整数a和n互质，那么一定可以找到整数b，使得 ab-1 被n整除，或者说ab被n除的余数是1。这时，b就叫做a的“模反元素”。</p>
-<h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>原文n:通过<br><code>n^e = c(mod N)</code><br>得到c,发送c</p>
-<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>将c，通过<br><code>c^d = n(mod N)</code><br>得到原文n</p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><code>c^d ≡ n^(e·d)(mod N)</code><br>以及ed ≡ 1 (mod p-1)和ed ≡ 1 (mod q-1)。由费马小定理可证明（因为p和q是质数）<br>n^(e·d)≡ n(mod p) 和 n^(e·d) ≡ n (mod q)<br>故：<br><code>n(^e·d) ≡ n (mod pq)</code></p>
-<h1 id="HTTP各版本异同"><a href="#HTTP各版本异同" class="headerlink" title="HTTP各版本异同"></a>HTTP各版本异同</h1><h2 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h2><p>1.0版本的工作方式是每次TCP连接只能发送一个请求，当服务器响应后就会关闭这次连接，下一个请求需要再次建立TCP连接，就是不支持keepalive.<br>为了解决这个问题，有些浏览器在请求时，用了一个非标准的<code>Connection</code>字段。<br><code>Connection: keep-alive</code></p>
-<h2 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h2><h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>1.1 版的最大变化，就是引入了<strong>持久连接</strong>,<em>即TCP连接默认不关闭，可以被多个请求复用，不用声明Connection: keep-alive.一个TCP连接可以允许多个HTTP请求</em></p>
-<h3 id="管道机制"><a href="#管道机制" class="headerlink" title="管道机制"></a>管道机制</h3><p>一个TCP连接里，<strong>允许多个请求同时发送</strong>，增加了并发性，进一步改善了HTTP协议的效率。以前是客户端想要请求资源A和B,先发请求A，得到响应再发请求B.现在是同时发送请求A和B.</p>
-<h2 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP/2.0"></a>HTTP/2.0</h2><h3 id="多工"><a href="#多工" class="headerlink" title="多工"></a>多工</h3><p>在一个连接里，客户端和浏览器都可以同时发送多个请求或回应，而且不用按照顺序一一对应，这样就避免了”队头堵塞”。</p>
-<h3 id="二进制协议"><a href="#二进制协议" class="headerlink" title="二进制协议"></a>二进制协议</h3><p>1.1中头信息是文本，数据体可以说文本和二进制。2.0中头信息和数据体都是二进制，通常为“帧”</p>
-<h1 id="常用的请求头与响应头字段"><a href="#常用的请求头与响应头字段" class="headerlink" title="常用的请求头与响应头字段"></a>常用的请求头与响应头字段</h1><p>五层模型：<br><img src="https://static01.imgkr.com/temp/f2426aa90a0c4aacbfa764b8991c584d.png" alt="pic"></p>
-<p>请求实例：<br><img src="https://static01.imgkr.com/temp/9398591a7b8e4a81a22592e9a320949a.png" alt="pic"></p>
-<p>响应实例：<br><img src="https://static01.imgkr.com/temp/4b69e37d98994b22b2c0930d88e9e6c8.png" alt="pic"></p>
-<p>请求与响应通用字段：<br><img src="https://static01.imgkr.com/temp/69a0d43cb2ce430daaeee69b4c4fe440.png" alt="pic"></p>
-<p>常见请求头：<br><img src="https://static01.imgkr.com/temp/ed4c743451d84ec9984959c4ce0c5213.png" alt="pic"></p>
-<p>常见响应头：<br><img src="https://static01.imgkr.com/temp/9c2e49a4b5ad4217a354f8491e5e06cb.png" alt="pic"></p>
-<p><a href="https://www.zhihu.com/search?type=content&amp;q=RSA" target="_blank" rel="noopener">RSA知乎</a><br><a href="https://blog.csdn.net/sunmenggmail/article/details/11994013" target="_blank" rel="noopener">RSA</a><br><a href="https://blog.csdn.net/qq_22238021/article/details/81197157" target="_blank" rel="noopener">HTTP</a></p>
+<p>欧拉函数：fn(n) = 小于n的所有n的互质数数目，如fn(8)=4（1,3,5,7）
+模反元素：如果两个正整数a和n互质，那么一定可以找到整数b，使得 ab-1 被n整除，或者说ab被n除的余数是1。这时，b就叫做a的“模反元素”。</p>
+<h3>加密过程</h3>
+<p>原文n:通过
+<code>n^e = c(mod N)</code>
+得到c,发送c</p>
+<h3>解密过程</h3>
+<p>将c，通过
+<code>c^d = n(mod N)</code>
+得到原文n</p>
+<h3>原理</h3>
+<p><code>c^d ≡ n^(e·d)(mod N)</code>
+以及ed ≡ 1 (mod p-1)和ed ≡ 1 (mod q-1)。由费马小定理可证明（因为p和q是质数）
+n^(e·d)≡ n(mod p) 和 n^(e·d) ≡ n (mod q)
+故：
+<code>n(^e·d) ≡ n (mod pq)</code></p>
+<h1>HTTP各版本异同</h1>
+<h2>HTTP/1.0</h2>
+<p>1.0版本的工作方式是每次TCP连接只能发送一个请求，当服务器响应后就会关闭这次连接，下一个请求需要再次建立TCP连接，就是不支持keepalive.
+为了解决这个问题，有些浏览器在请求时，用了一个非标准的<code>Connection</code>字段。
+<code>Connection: keep-alive</code></p>
+<h2>HTTP/1.1</h2>
+<h3>持久连接</h3>
+<p>1.1 版的最大变化，就是引入了<strong>持久连接</strong>,<em>即TCP连接默认不关闭，可以被多个请求复用，不用声明Connection: keep-alive.一个TCP连接可以允许多个HTTP请求</em></p>
+<h3>管道机制</h3>
+<p>一个TCP连接里，<strong>允许多个请求同时发送</strong>，增加了并发性，进一步改善了HTTP协议的效率。以前是客户端想要请求资源A和B,先发请求A，得到响应再发请求B.现在是同时发送请求A和B.</p>
+<h2>HTTP/2.0</h2>
+<h3>多工</h3>
+<p>在一个连接里，客户端和浏览器都可以同时发送多个请求或回应，而且不用按照顺序一一对应，这样就避免了&quot;队头堵塞&quot;。</p>
+<h3>二进制协议</h3>
+<p>1.1中头信息是文本，数据体可以说文本和二进制。2.0中头信息和数据体都是二进制，通常为“帧”</p>
+<h1>常用的请求头与响应头字段</h1>
+<p>五层模型：
+<img src="https://static01.imgkr.com/temp/f2426aa90a0c4aacbfa764b8991c584d.png" alt="pic"></p>
+<p>请求实例：
+<img src="https://static01.imgkr.com/temp/9398591a7b8e4a81a22592e9a320949a.png" alt="pic"></p>
+<p>响应实例：
+<img src="https://static01.imgkr.com/temp/4b69e37d98994b22b2c0930d88e9e6c8.png" alt="pic"></p>
+<p>请求与响应通用字段：
+<img src="https://static01.imgkr.com/temp/69a0d43cb2ce430daaeee69b4c4fe440.png" alt="pic"></p>
+<p>常见请求头：
+<img src="https://static01.imgkr.com/temp/ed4c743451d84ec9984959c4ce0c5213.png" alt="pic"></p>
+<p>常见响应头：
+<img src="https://static01.imgkr.com/temp/9c2e49a4b5ad4217a354f8491e5e06cb.png" alt="pic"></p>
+<p><a href="https://www.zhihu.com/search?type=content&amp;q=RSA" target="_blank" rel="noopener">RSA知乎</a>
+<a href="https://blog.csdn.net/sunmenggmail/article/details/11994013" target="_blank" rel="noopener">RSA</a>
+<a href="https://blog.csdn.net/qq_22238021/article/details/81197157" target="_blank" rel="noopener">HTTP</a></p>
 
     </div>
 
@@ -339,7 +389,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一个故事"><span class="nav-number">1.</span> <span class="nav-text">一个故事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#http"><span class="nav-number">1.1.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">1.2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">1.3.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中间人攻击"><span class="nav-number">1.4.</span> <span class="nav-text">中间人攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#证书"><span class="nav-number">1.5.</span> <span class="nav-text">证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息摘要"><span class="nav-number">1.6.</span> <span class="nav-text">消息摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#签名-证书"><span class="nav-number">1.7.</span> <span class="nav-text">签名 + 证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA加密算法"><span class="nav-number">2.</span> <span class="nav-text">RSA加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#又一个小故事"><span class="nav-number">2.1.</span> <span class="nav-text">又一个小故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RSA加密过程："><span class="nav-number">2.2.</span> <span class="nav-text">RSA加密过程：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加密过程"><span class="nav-number">2.2.1.</span> <span class="nav-text">加密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解密过程"><span class="nav-number">2.2.2.</span> <span class="nav-text">解密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">2.2.3.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP各版本异同"><span class="nav-number">3.</span> <span class="nav-text">HTTP各版本异同</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-1-0"><span class="nav-number">3.1.</span> <span class="nav-text">HTTP/1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-1-1"><span class="nav-number">3.2.</span> <span class="nav-text">HTTP/1.1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#持久连接"><span class="nav-number">3.2.1.</span> <span class="nav-text">持久连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道机制"><span class="nav-number">3.2.2.</span> <span class="nav-text">管道机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-2-0"><span class="nav-number">3.3.</span> <span class="nav-text">HTTP/2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多工"><span class="nav-number">3.3.1.</span> <span class="nav-text">多工</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制协议"><span class="nav-number">3.3.2.</span> <span class="nav-text">二进制协议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用的请求头与响应头字段"><span class="nav-number">4.</span> <span class="nav-text">常用的请求头与响应头字段</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一个故事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.4.</span> <span class="nav-text">中间人攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.</span> <span class="nav-text">证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.6.</span> <span class="nav-text">消息摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.7.</span> <span class="nav-text">签名 + 证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">RSA加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.1.</span> <span class="nav-text">又一个小故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.</span> <span class="nav-text">RSA加密过程：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.1.</span> <span class="nav-text">加密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.2.</span> <span class="nav-text">解密过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.3.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">HTTP各版本异同</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">HTTP/1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.</span> <span class="nav-text">HTTP/1.1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.1.</span> <span class="nav-text">持久连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.2.</span> <span class="nav-text">管道机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.</span> <span class="nav-text">HTTP/2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.1.</span> <span class="nav-text">多工</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.2.</span> <span class="nav-text">二进制协议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">常用的请求头与响应头字段</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -354,7 +404,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
