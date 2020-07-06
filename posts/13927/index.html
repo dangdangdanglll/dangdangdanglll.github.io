@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh">
+  <meta name="description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh &amp;lt;!-- more --&amp;gt; ESLint的作用 第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：  有利于自己代码风格的形成而不至于放飞自">
 <meta name="keywords" content="ESLint">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ESLint初体验">
 <meta property="og:url" content="http://yoursite.com/posts/13927/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh">
+<meta property="og:description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh &amp;lt;!-- more --&amp;gt; ESLint的作用 第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：  有利于自己代码风格的形成而不至于放飞自">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2020-06-28T05:38:29.294Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLint初体验">
-<meta name="twitter:description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh">
+<meta name="twitter:description" content="最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh &amp;lt;!-- more --&amp;gt; ESLint的作用 第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：  有利于自己代码风格的形成而不至于放飞自">
 
 <link rel="canonical" href="http://yoursite.com/posts/13927/">
 
@@ -217,49 +217,66 @@
 
       
         <p>最近在项目中导师重写了ESLint规则，感觉有必要学习一下ESLint了，开始吧！hhhhhhhhh</p>
-<a id="more"></a>
-<h1 id="ESLint的作用"><a href="#ESLint的作用" class="headerlink" title="ESLint的作用"></a>ESLint的作用</h1><p>第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：</p>
+<p>&lt;!-- more --&gt;</p>
+<h1>ESLint的作用</h1>
+<p>第一次接触ESLint是在学习vue脚手架的时候，使用了ESLint规则报了巨多错误，从此对它抱有抵触心态。但是现在不得不直面ESLint，感觉它没有那么恶心反而很有用的。它的作用大概就在两方面：</p>
 <ul>
 <li>有利于自己代码风格的形成而不至于放飞自我</li>
 <li>在团队中形成规范，能减少不同环境等造成的bug</li>
 </ul>
-<h1 id="ESLint的使用"><a href="#ESLint的使用" class="headerlink" title="ESLint的使用"></a>ESLint的使用</h1><ol>
+<h1>ESLint的使用</h1>
+<ol>
 <li>配置注释： 使用JavaScript注释将配置信息直接嵌入到文件里</li>
 <li>配置文件： 有多种文件类型，以<code>.eslintrc.js</code>为常见，还有<code>.eslintrc.yaml</code>,<code>.eslintrc.json</code>等</li>
 <li>在<code>package.json</code>文件中创建<code>eslintConfig</code>属性</li>
 </ol>
 <p><em>.yaml：YAML任然是一种标记语言，多用于配置文件</em></p>
-<h1 id="结合一个例子说明"><a href="#结合一个例子说明" class="headerlink" title="结合一个例子说明"></a>结合一个例子说明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// .eslintrc.js</span><br><span class="line">module.exports = &#123;</span><br><span class="line">    // 指定解析器</span><br><span class="line">    &apos;parse&apos;: &apos;&apos;,</span><br><span class="line">    // 指定解析器选项</span><br><span class="line">    &apos;parserOptions&apos;: &#123;&#125;,</span><br><span class="line">    // 指定脚本的运行环境</span><br><span class="line">    &apos;env&apos;: &#123;&#125;,</span><br><span class="line">    // 别人可以直接使用你配置好的ESLint</span><br><span class="line">    &apos;root&apos;: true,</span><br><span class="line">    // 脚本在执行期间访问的额外的全局变量</span><br><span class="line">    &apos;globals&apos;: &#123;&#125;,</span><br><span class="line">    // 启用的规则及其各自的错误级别</span><br><span class="line">    &apos;rules&apos;: &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1>结合一个例子说明</h1>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// .eslintrc.js</span><br><span class="line">module.exports = &#123;</span><br><span class="line">    // 指定解析器</span><br><span class="line">    &apos;parse&apos;: &apos;&apos;,</span><br><span class="line">    // 指定解析器选项</span><br><span class="line">    &apos;parserOptions&apos;: &#123;&#125;,</span><br><span class="line">    // 指定脚本的运行环境</span><br><span class="line">    &apos;env&apos;: &#123;&#125;,</span><br><span class="line">    // 别人可以直接使用你配置好的ESLint</span><br><span class="line">    &apos;root&apos;: true,</span><br><span class="line">    // 脚本在执行期间访问的额外的全局变量</span><br><span class="line">    &apos;globals&apos;: &#123;&#125;,</span><br><span class="line">    // 启用的规则及其各自的错误级别</span><br><span class="line">    &apos;rules&apos;: &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>关于各属性：</p>
 <ol>
-<li><p>选择器选项（parserOptions）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;parserOptions&quot;: &#123;</span><br><span class="line">    &quot;ecmaVersion&quot;: 6, //ES的版本，默认为5</span><br><span class="line">    &quot;sourceType&quot;: &quot;module&quot;, //指定源代码存在的位置，script | module，默认为script。</span><br><span class="line">    &quot;ecmaFeatures&quot;: &#123; //指定要使用其他那些语言对象</span><br><span class="line">        &quot;experimentalObjectRestSpread&quot;: true,//启用对对象的扩展</span><br><span class="line">        &quot;jsx&quot;: true, //启用jsx语法</span><br><span class="line">        &quot;globalReturn&quot;:true, //允许return在全局使用</span><br><span class="line">        &quot;impliedStrict&quot;:true //启用严格校验模式</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>
+<p>选择器选项（parserOptions）
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;parserOptions&quot;: &#123;</span><br><span class="line">    &quot;ecmaVersion&quot;: 6, //ES的版本，默认为5</span><br><span class="line">    &quot;sourceType&quot;: &quot;module&quot;, //指定源代码存在的位置，script | module，默认为script。</span><br><span class="line">    &quot;ecmaFeatures&quot;: &#123; //指定要使用其他那些语言对象</span><br><span class="line">        &quot;experimentalObjectRestSpread&quot;: true,//启用对对象的扩展</span><br><span class="line">        &quot;jsx&quot;: true, //启用jsx语法</span><br><span class="line">        &quot;globalReturn&quot;:true, //允许return在全局使用</span><br><span class="line">        &quot;impliedStrict&quot;:true //启用严格校验模式</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>解析器(parser),默认使用Espree</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser&quot;: &quot;babel-eslint&quot;,</span><br></pre></td></tr></table></figure>
+<li>
+<p>解析器(parser),默认使用Espree
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parser&quot;: &quot;babel-eslint&quot;,</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>环境配置（env）,默认都为false, 但设置环境并不冲突，如<code>node, brower, commonjs</code></p>
+<li>
+<p>环境配置（env）,默认都为false, 但设置环境并不冲突，如<code>node, brower, commonjs</code></p>
 </li>
-<li><p>插件（plugins)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;plugins&quot;: [&quot;standard&quot;,&quot;promise&quot;,&quot;react&quot;],</span><br></pre></td></tr></table></figure>
+<li>
+<p>插件（plugins)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;plugins&quot;: [&quot;standard&quot;,&quot;promise&quot;,&quot;react&quot;],</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>全局变量（globals), true表示可以被覆盖，false表示不允许覆盖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;globals&quot;: &#123;</span><br><span class="line">&quot;document&quot;: true,</span><br><span class="line">&quot;navigator&quot;: true,</span><br><span class="line">&quot;window&quot;: true,</span><br><span class="line">&quot;think&quot;: true</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<li>
+<p>全局变量（globals), true表示可以被覆盖，false表示不允许覆盖
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;globals&quot;: &#123;</span><br><span class="line">&quot;document&quot;: true,</span><br><span class="line">&quot;navigator&quot;: true,</span><br><span class="line">&quot;window&quot;: true,</span><br><span class="line">&quot;think&quot;: true</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>自定义规则（setting）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;settings&quot;: &#123;</span><br><span class="line">&quot;sharedData&quot;: &quot;Hello&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>
+<p>自定义规则（setting）
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;settings&quot;: &#123;</span><br><span class="line">&quot;sharedData&quot;: &quot;Hello&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>禁用持续查找（root）,默认情况下，ESLint将在根目录下的所有父文件夹中查找配置文件。该属性的作用是一旦发现了配置文件就停止对父文件夹的查找</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;root&quot;: true</span><br></pre></td></tr></table></figure>
+<li>
+<p>禁用持续查找（root）,默认情况下，ESLint将在根目录下的所有父文件夹中查找配置文件。该属性的作用是一旦发现了配置文件就停止对父文件夹的查找
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;root&quot;: true</span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>共享配置（extents）,该属性可以是eslint命令，也可以是继承文件的路径。 eslint:all:表示引入当前版本eslint的所有核心规则。 eslint:recommended:表示引入eslint的核心功能，并且报告一些常见的共同错误。 如果值为绝对或相对路径则相当于导入路径对应的规则配置。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extends&quot;: recommended,</span><br></pre></td></tr></table></figure>
+<li>
+<p>共享配置（extents）,该属性可以是eslint命令，也可以是继承文件的路径。 eslint:all:表示引入当前版本eslint的所有核心规则。 eslint:recommended:表示引入eslint的核心功能，并且报告一些常见的共同错误。 如果值为绝对或相对路径则相当于导入路径对应的规则配置。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extends&quot;: recommended,</span><br></pre></td></tr></table></figure></p>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;extends&quot;: &quot;./eslint-config-public.js&quot;,</span><br></pre></td></tr></table></figure>
-<h1 id="重要规则："><a href="#重要规则：" class="headerlink" title="重要规则："></a>重要规则：</h1><p><strong><br>“off”或0： 关闭规则<br>“warn”或1： 警告<br>“error”或2： 错误
-</strong></p>
-<h1 id="一些常见的rules"><a href="#一些常见的rules" class="headerlink" title="一些常见的rules:"></a>一些常见的rules:</h1><p><code>&#39;camelcase&#39;: 0,</code>  驼峰命名<br><code>&#39;eqeqeq&#39;: 0</code>  全等</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;extends&quot;: &quot;./eslint-config-public.js&quot;,</span><br></pre></td></tr></table></figure></p>
+<h1>重要规则：</h1>
+<p>**
+&quot;off&quot;或0： 关闭规则
+&quot;warn&quot;或1： 警告
+&quot;error&quot;或2： 错误
+**</p>
+<h1>一些常见的rules:</h1>
+<p><code>'camelcase': 0,</code>  驼峰命名
+<code>'eqeqeq': 0</code>  全等</p>
 <p>其他详见官方文档</p>
 
     </div>
@@ -345,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ESLint的作用"><span class="nav-number">1.</span> <span class="nav-text">ESLint的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ESLint的使用"><span class="nav-number">2.</span> <span class="nav-text">ESLint的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结合一个例子说明"><span class="nav-number">3.</span> <span class="nav-text">结合一个例子说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重要规则："><span class="nav-number">4.</span> <span class="nav-text">重要规则：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些常见的rules"><span class="nav-number">5.</span> <span class="nav-text">一些常见的rules:</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">ESLint的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">ESLint的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">结合一个例子说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">重要规则：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">一些常见的rules:</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -373,7 +390,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
