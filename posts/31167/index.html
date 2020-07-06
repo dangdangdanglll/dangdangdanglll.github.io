@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
+  <meta name="description" content="浏览器拿到服务器的资源是如何处理的？">
 <meta name="keywords" content="浏览器渲染">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浏览器渲染过程">
 <meta property="og:url" content="http://yoursite.com/posts/31167/index.html">
 <meta property="og:site_name" content="dang&#39;s technology blog">
-<meta property="og:description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
+<meta property="og:description" content="浏览器拿到服务器的资源是如何处理的？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png">
 <meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/f5440a32-f552-4aaa-a83e-f0621369c413.png">
 <meta property="og:updated_time" content="2020-07-02T08:16:43.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器渲染过程">
-<meta name="twitter:description" content="浏览器拿到服务器的资源是如何处理的？ &amp;lt;!-- more --&amp;gt; 资源主要包括HTML,CSS,JS等，先看下图：  主要步骤：  根据HTML构建DOM 根据CSS构建CSSOM 合并DOM和CSSOM生成Render Tree Layout: 根据渲染对象计算出每个对象的尺寸和位置等 painting： 将上一步的结果渲染到页面上  window.onload和DOMcontent">
+<meta name="twitter:description" content="浏览器拿到服务器的资源是如何处理的？">
 <meta name="twitter:image" content="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png">
 
 <link rel="canonical" href="http://yoursite.com/posts/31167/">
@@ -214,9 +214,8 @@
 
       
         <p>浏览器拿到服务器的资源是如何处理的？</p>
-<p>&lt;!-- more --&gt;</p>
-<p>资源主要包括HTML,CSS,JS等，先看下图：
-<img src="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png" alt="pic"></p>
+<a id="more"></a>
+<p>资源主要包括HTML,CSS,JS等，先看下图：<br><img src="https://imgkr.cn-bj.ufileos.com/3db9a442-df04-4e79-902a-31ac102fe5ba.png" alt="pic"></p>
 <p>主要步骤：</p>
 <ol>
 <li>根据HTML构建DOM</li>
@@ -230,13 +229,8 @@
 <li>HTML parser构建完DOM树后document会派发DOMcontentLoaded事件</li>
 <li>所有资源(img等)全部加载完毕才会触发onload事件</li>
 </ul>
-<p>script标签中defer和async分别什么意思？
-<img src="https://imgkr.cn-bj.ufileos.com/f5440a32-f552-4aaa-a83e-f0621369c413.png" alt="pic">
-说明：如果没有defer和async那么script的下载和执行都会阻塞
-有defer下载时不阻塞，会在DOM构建完，DOMcontentLoaded之前执行
-有async下载时不阻塞，下载完立即执行，执行时阻塞</p>
-<p>CSS会阻塞HTML的解析和渲染吗？
-CSS不会阻塞HTML的解析但是会阻塞HTML的渲染，所以感观上CSS会阻塞页面的，且css加载会阻塞后面的js语句的执行</p>
+<p>script标签中defer和async分别什么意思？<br><img src="https://imgkr.cn-bj.ufileos.com/f5440a32-f552-4aaa-a83e-f0621369c413.png" alt="pic"><br>说明：如果没有defer和async那么script的下载和执行都会阻塞<br>有defer下载时不阻塞，会在DOM构建完，DOMcontentLoaded之前执行<br>有async下载时不阻塞，下载完立即执行，执行时阻塞</p>
+<p>CSS会阻塞HTML的解析和渲染吗？<br>CSS不会阻塞HTML的解析但是会阻塞HTML的渲染，所以感观上CSS会阻塞页面的，且css加载会阻塞后面的js语句的执行</p>
 
     </div>
 
