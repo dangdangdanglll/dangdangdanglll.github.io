@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/site.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/site.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="终于开始学习vue原理啦！首先说明vue2.x中关于数组和对象中存在的问题：  无法检测数组和对象的新增 无法检测通过索引改变数组项的操作">
+<meta name="keywords" content="defineProperty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从Vue检测数组开始说起">
+<meta property="og:url" content="http://yoursite.com/posts/33318/index.html">
+<meta property="og:site_name" content="dang&#39;s technology blog">
+<meta property="og:description" content="终于开始学习vue原理啦！首先说明vue2.x中关于数组和对象中存在的问题：  无法检测数组和对象的新增 无法检测通过索引改变数组项的操作">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-09T12:36:53.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从Vue检测数组开始说起">
+<meta name="twitter:description" content="终于开始学习vue原理啦！首先说明vue2.x中关于数组和对象中存在的问题：  无法检测数组和对象的新增 无法检测通过索引改变数组项的操作">
+
+<link rel="canonical" href="http://yoursite.com/posts/33318/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从Vue检测数组开始说起 | dang's technology blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dang's technology blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Coding Fighting</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/33318/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ava.png">
+      <meta itemprop="name" content="dangsenlin">
+      <meta itemprop="description" content="never giveup stronger survival">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dang's technology blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从Vue检测数组开始说起
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-09 02:47:59 / 修改时间：20:36:53" itemprop="dateCreated datePublished" datetime="2020-07-09T02:47:59+08:00">2020-07-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/source/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><em>终于开始学习vue原理啦！</em><br>首先说明vue2.x中关于数组和对象中存在的问题：</p>
+<ol>
+<li><strong>无法检测数组和对象的新增</strong></li>
+<li><strong>无法检测通过索引改变数组项的操作</strong></li>
+</ol>
+<a id="more"></a>
+<h1 id="Object-defineProperty-与-Proxy"><a href="#Object-defineProperty-与-Proxy" class="headerlink" title="Object.defineProperty 与 Proxy"></a>Object.defineProperty 与 Proxy</h1><h2 id="搞清楚vue中对数组做了什么"><a href="#搞清楚vue中对数组做了什么" class="headerlink" title="搞清楚vue中对数组做了什么"></a>搞清楚vue中对数组做了什么</h2><p>关于第二点需说明，并不是.defineProperty不能检测数组的变化，只是需要<strong>遍历</strong>(keys)<br>代码示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;</span><br><span class="line">  name: [1,2,3]</span><br><span class="line">&#125;</span><br><span class="line">Object.defineProperty(obj, &quot;name&quot;, &#123;</span><br><span class="line">  enumerable: true,</span><br><span class="line">  configurable: true,  </span><br><span class="line">  set: function (value) &#123;</span><br><span class="line">    name = value;</span><br><span class="line">    console.log(&apos;你取了一个名字叫做&apos; + value);</span><br><span class="line">  &#125;,</span><br><span class="line">  get: function () &#123;</span><br><span class="line">    return &apos;你是&apos; + name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">obj.name = &quot;senlin&quot;  //你取了一个名字叫做senlin</span><br><span class="line">obj.name[0] = 4      //无输出</span><br></pre></td></tr></table></figure></p>
+<font color="red">上面的代码只是说明defineProperty无法进行嵌套拦截(即要拦截的属性依然是一个对象或数组，那么对其属性的操作是检测不到的)。另外，Proxy也是无法嵌套拦截的</font>
+
+<p>那么，如果想要对数组项进行拦截，需要怎么做呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function defineReactive(data, key, value) &#123;</span><br><span class="line">    Object.defineProperty(data, key, &#123;</span><br><span class="line">        enumerable: true,</span><br><span class="line">        configurable: true,</span><br><span class="line">        get: function defineGet() &#123;</span><br><span class="line">            console.log(`get key: $&#123;key&#125; value: $&#123;value&#125;`)</span><br><span class="line">            return value</span><br><span class="line">        &#125;,</span><br><span class="line">        set: function defineSet(newVal) &#123;</span><br><span class="line">            console.log(`set key: $&#123;key&#125; value: $&#123;newVal&#125;`)</span><br><span class="line">            value = newVal</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">function observe(data) &#123;</span><br><span class="line">    Object.keys(data).forEach(function(key) &#123;</span><br><span class="line">        defineReactive(data, key, data[key])</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">let arr = [1, 2, 3]</span><br><span class="line">observe(arr)</span><br><span class="line">arr[0] = 4  //set key: 0 value: 4</span><br></pre></td></tr></table></figure></p>
+<font color="red">对每个属性（下标）都进行了defineProperty,但是vue中为啥通过下标改变检测不到？原因是vue中对于数组并没有进行walk(对象进行了)，由于数组在vue中的作用（同类型数据的集合），如果像对象一样进行walk，十分耗费性能且没必要。</font>
+
+<p>对于数组的方法(push,pop等),vue是可以检测到的，怎么回事呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">const aryMethods = [&apos;push&apos;, &apos;pop&apos;, &apos;shift&apos;, &apos;unshift&apos;, &apos;splice&apos;, &apos;sort&apos;, &apos;reverse&apos;];</span><br><span class="line">const arrayAugmentations = [];</span><br><span class="line">aryMethods.forEach((method)=&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // 这里是原生 Array 的原型方法</span><br><span class="line">  let original = Array.prototype[method];</span><br><span class="line"></span><br><span class="line">  // 将 push, pop 等封装好的方法定义在对象 arrayAugmentations 的属性上</span><br><span class="line">  // 注意：是实例属性而非原型属性</span><br><span class="line">  arrayAugmentations[method] = function () &#123;</span><br><span class="line">    console.log(&apos;我被改变啦!&apos;);</span><br><span class="line"></span><br><span class="line">    // 调用对应的原生方法并返回结果</span><br><span class="line">    return original.apply(this, arguments);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br><span class="line">let list = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;];</span><br><span class="line">// 将我们要监听的数组的原型指针指向上面定义的空数组对象</span><br><span class="line">// 这样就能在调用 push, pop 这些方法时走进我们刚定义的方法，多了一句 console.log</span><br><span class="line">list.__proto__ = arrayAugmentations;</span><br><span class="line">list.push(&apos;d&apos;);  // 我被改变啦！</span><br><span class="line">// 这个 list2 是个普通的数组，所以调用 push 不会走到我们的方法里面。</span><br><span class="line">let list2 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;];</span><br><span class="line">list2.push(&apos;d&apos;);  // 不输出内容</span><br></pre></td></tr></table></figure></p>
+<font color="red">可以得出结论：vue重写了数组方法的<strong>proto</strong>,在重写中对每个方法先进行拦截（写自己的方法），再重写调用原方法（保证功能正常）</font>
+
+<p>vue给 data 中的数组或对象新增属性时，需要使用 vm.$set 才能保证新增的属性也是响应式的。set方法源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Set a property on an object. Adds the new property and</span><br><span class="line"> * triggers change notification if the property doesn&apos;t</span><br><span class="line"> * already exist.</span><br><span class="line"> */</span><br><span class="line">export function set (target: Array&lt;any&gt; | Object, key: any, val: any): any &#123;</span><br><span class="line">    // 如果target是数组，且key是有效的数组索引，会调用数组的splice方法，</span><br><span class="line">    // 我们上面说过，数组的splice方法会被重写，重写的方法中会手动Observe</span><br><span class="line">    // 所以vue的set方法，对于数组，就是直接调用重写splice方法</span><br><span class="line">    if (Array.isArray(target) &amp;&amp; isValidArrayIndex(key)) &#123;</span><br><span class="line">        target.length = Math.max(target.length, key)</span><br><span class="line">        target.splice(key, 1, val)</span><br><span class="line">        return val</span><br><span class="line">    &#125;</span><br><span class="line">    // 对于对象，如果key本来就是对象中的属性，直接修改值就可以触发更新</span><br><span class="line">    if (key in target &amp;&amp; !(key in Object.prototype)) &#123;</span><br><span class="line">        target[key] = val</span><br><span class="line">        return val</span><br><span class="line">    &#125;</span><br><span class="line">    // vue的响应式对象中都会添加了__ob__属性，所以可以根据是否有__ob__属性判断是否为响应式对象</span><br><span class="line">    const ob = (target: any).__ob__</span><br><span class="line">    // 如果不是响应式对象，直接赋值</span><br><span class="line">    if (!ob) &#123;</span><br><span class="line">        target[key] = val</span><br><span class="line">        return val</span><br><span class="line">    &#125;</span><br><span class="line">    // 调用defineReactive给数据添加了 getter 和 setter，</span><br><span class="line">    // 所以vue的set方法，对于响应式的对象，就会调用defineReactive重新定义响应式对象，defineReactive 函数</span><br><span class="line">    defineReactive(ob.value, key, val)</span><br><span class="line">    ob.dep.notify()</span><br><span class="line">    return val</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在 set 方法中，对 target 是数组和对象做了分别的处理， target 是数组时，会调用重写过的 splice 方法进行手动 Observe 。<br>对于对象，如果 key 本来就是对象的属性，则直接修改值触发更新，否则调用 defineReactive 方法重新定义响应式对象。</p>
+<h2 id="关于defineProperty和Proxy的区别："><a href="#关于defineProperty和Proxy的区别：" class="headerlink" title="关于defineProperty和Proxy的区别："></a>关于defineProperty和Proxy的区别：</h2><ol>
+<li>defineProperty是面对对象的属性的，Proxy是面对整个对象的，虽然他们都不能嵌套拦截，但是defineProperty无法检测数组的push等方法，但是Proxy却可以检测。</li>
+<li>Proxy拦截了多达13种方法</li>
+</ol>
+<p>Proxy不能嵌套拦截和Proxy能检测数组下标变化及push等变化是否冲突了？<br>如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let arr = [1,2,3]</span><br><span class="line">let proxy = new Proxy(arr, &#123;</span><br><span class="line">    get (target, key, receiver) &#123;</span><br><span class="line">        console.log(&apos;get&apos;, key)</span><br><span class="line">        return Reflect.get(target, key, receiver)</span><br><span class="line">    &#125;,</span><br><span class="line">    set (target, key, value, receiver) &#123;</span><br><span class="line">        console.log(&apos;set&apos;, key, value)</span><br><span class="line">        return Reflect.set(target, key, value, receiver)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">proxy[0] = -1  //set 0 -1</span><br></pre></td></tr></table></figure></p>
+<h2 id="Proxy应用："><a href="#Proxy应用：" class="headerlink" title="Proxy应用："></a>Proxy应用：</h2><p>Proxy关于多继承的一个应用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">let foo = &#123;</span><br><span class="line">  foo () &#123;</span><br><span class="line">    console.log(&apos;foo&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">let bar = &#123;</span><br><span class="line">  bar () &#123;</span><br><span class="line">    console.log(&apos;bar&apos;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 正常状态下，对象只能继承一个对象，要么有 foo()，要么有 bar()</span><br><span class="line">let sonOfFoo = Object.create(foo);</span><br><span class="line">sonOfFoo.foo();     // foo</span><br><span class="line">let sonOfBar = Object.create(bar);</span><br><span class="line">sonOfBar.bar();     // bar</span><br><span class="line">// 黑科技开始</span><br><span class="line">let sonOfFooBar = new Proxy(&#123;&#125;, &#123;</span><br><span class="line">  get (target, key) &#123;</span><br><span class="line">    return target[key] || foo[key] || bar[key];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">// 我们创造了一个对象同时继承了两个对象，foo() 和 bar() 同时拥有</span><br><span class="line">sonOfFooBar.foo();   // foo 有foo方法，继承自对象foo</span><br><span class="line">sonOfFooBar.bar();   // bar 也有bar方法，继承自对象bar</span><br></pre></td></tr></table></figure></p>
+<p>隐藏私有变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function getObject(rawObj, privateKeys) &#123;</span><br><span class="line">  return new Proxy(rawObj, &#123;</span><br><span class="line">    get (target, key, receiver) &#123;</span><br><span class="line">      if (privateKeys.indexOf(key) !== -1) &#123;</span><br><span class="line">        throw new ReferenceError(`$&#123;key&#125; 是私有属性，不能访问。`)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      return target[key]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">let rawObj = &#123;</span><br><span class="line">  name: &apos;Zoe&apos;,</span><br><span class="line">  age: 18,</span><br><span class="line">  isFemale: true</span><br><span class="line">&#125;</span><br><span class="line">let obj = getObject(rawObj, [&apos;age&apos;])</span><br><span class="line">console.log(obj.name) // Zoe</span><br><span class="line">console.log(obj.age) // 报错</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://www.jb51.net/article/171869.htm" target="_blank" rel="noopener">参考</a><br><a href="https://blog.csdn.net/mmjinglin/article/details/85097794" target="_blank" rel="noopener">参考</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/source/tags/defineProperty/" rel="tag"># defineProperty</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/27152/" rel="prev" title="typeof与instance及类型判断">
+      <i class="fa fa-chevron-left"></i> typeof与instance及类型判断
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-defineProperty-与-Proxy"><span class="nav-number">1.</span> <span class="nav-text">Object.defineProperty 与 Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搞清楚vue中对数组做了什么"><span class="nav-number">1.1.</span> <span class="nav-text">搞清楚vue中对数组做了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于defineProperty和Proxy的区别："><span class="nav-number">1.2.</span> <span class="nav-text">关于defineProperty和Proxy的区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proxy应用："><span class="nav-number">1.3.</span> <span class="nav-text">Proxy应用：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dangsenlin" src="/images/ava.png">
+  <p class="site-author-name" itemprop="name">dangsenlin</p>
+  <div class="site-description" itemprop="description">never giveup stronger survival</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dangsenlin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
